@@ -1,1 +1,3 @@
 ansible -vvvv wordpress -u vagrant --private-key private_key -i hosts -m shell -a 'echo Hello, World'
+
+ansible-playbook provisioning.yml -u vagrant  -i hosts --private-key private_key
