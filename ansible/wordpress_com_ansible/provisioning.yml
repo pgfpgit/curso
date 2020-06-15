@@ -31,8 +31,8 @@
         state: present
     
     - name: 'Download do Wordpress'
-      get_url: 'https://wordpress.org/latest.tar.gz'
-        url: root
+      get_url:
+        url: 'https://wordpress.org/latest.tar.gz'
         dest: '/tmp/wordpress.tar.gz'
         
     - name: 'Descompactando o Wordpress'
