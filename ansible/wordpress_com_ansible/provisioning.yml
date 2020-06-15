@@ -31,7 +31,7 @@
         state: present
     
     - name: 'Download do Wordpress'
-      get_url: https://wordpress.org/latest.tar.gz.
+      get_url: 'https://wordpress.org/latest.tar.gz'
         url: root
         dest: '/tmp/wordpress.tar.gz'
         
