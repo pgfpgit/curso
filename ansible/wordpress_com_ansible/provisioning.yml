@@ -54,8 +54,9 @@
         regexp: '{{ item.regex }}'
         replace: '{{ item.value }}'
       with_items:
-        -{regex: 'database_name_here', value: 'wordpress_db'}
-        -{regex: 'username_here', value: 'wordpress_user'}
-        -{regex: 'password_here', value: '12345'}
+        - { regex: 'database_name_here', value: 'wordpress_db'}
+        - { regex: 'username_here', value: 'wordpress_user'}
+        - { regex: 'password_here', value: '12345'}
+      become: yes
         
         
