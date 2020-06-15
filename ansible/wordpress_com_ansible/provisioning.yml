@@ -42,7 +42,6 @@
         remote_src: yes
       become: yes   
 
-    - name: 'Copiando arquivo de configuraçao do Wordpress'
     - copy: 
         src: '/var/www/wordpress/wp-config-sample.php'
         dest: '/var/www/wordpress/wp-config.php'
