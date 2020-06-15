@@ -40,7 +40,14 @@
         src: '/tmp/wordpress.tar.gz'
         dest: /var/www/
         remote_src: yes
-      become: yes    
+      become: yes   
+
+    - name: 'Copiando arquivo de configuraçao do Wordpress'
+    - copy: 
+        src: '/var/www/wordpress/wp-config-sample.php'
+        dest: '/var/www/wordpress/wp-config.php'
+        remote_src: yes
+      become: yes  
       
         
         
