@@ -29,7 +29,17 @@
         password: 12345
         priv: 'wordpress_db.*:ALL'
         state: present
-      
+    
+    - name: 'Download do Wordpress'
+      get_url: https://wordpress.org/latest.tar.gz.
+        url: root
+        dest: '/tmp/wordpress.tar.gz'
+        
+    - name: 'Descompactando o Wordpress'
+      unarchive: 
+        src: '/tmp/wordpress.tar.gz'
+        dest: '/var/www/'
+      become: yes    
       
         
         
