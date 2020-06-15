@@ -1,0 +1,1 @@
+ansible -vvvv wordpress -u vagrant --private-key private_key -i hosts -m shell -a 'echo Hello, World'
