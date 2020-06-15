@@ -38,7 +38,8 @@
     - name: 'Descompactando o Wordpress'
       unarchive: 
         src: '/tmp/wordpress.tar.gz'
-        dest: '/var/www/'
+        dest: /var/www/
+        remote_src: yes
       become: yes    
       
         
