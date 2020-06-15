@@ -110,3 +110,16 @@ Trabalhando com variáveis e templates
 Usando roles, dependências e defaults
 0 / 9
 20min
+
+
+
+vagrant@ubuntu-bionic:~$ ansible --version
+ansible 2.9.9
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/home/vagrant/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/dist-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 2.7.17 (default, Apr 15 2020, 17:20:14) [GCC 7.5.0]
+vagrant@ubuntu-bionic:~$ python --version
+Python 2.7.17
+vagrant@ubuntu-bionic:~$

@@ -10,9 +10,13 @@ Vagrant.configure("2") do |config|
   	ansible.vm.network "public_network", ip: "10.10.2.40"
 	
 	ansible.vm.provision "shell",
-        inline: "cp /vagrant/id_bionic /home/vagrant/id_bionic && \
-                 chmod 600 /home/vagrant/id_bionic && \ 
-				 chown vagrant:vagrant /home/vagrant/id_bionic"
+        inline: "cp /vagrant/hosts /home/vagrant/hosts && \
+                 chown vagrant:vagrant /home/vagrant/hosts"
+				 	
+	ansible.vm.provision "shell",
+        inline: "cp /vagrant/private_key /home/vagrant/private_key && \
+                 chmod 600 /home/vagrant/private_key && \ 
+				 chown vagrant:vagrant /home/vagrant/private_key"
 				 
 	ansible.vm.provision "shell",
         inline: "apt-get update && \
@@ -33,6 +37,9 @@ Vagrant.configure("2") do |config|
 		vb.cpus = 1
 		vb.name = "wordpress"	
 	end
+  
+  
+  
   
   end
   
