@@ -1,0 +1,112 @@
+
+Faça esse curso de Infraestrutura como Código e:
+
+    Automatize a instalação de uma máquina
+    Provisione tarefas usando Ansible
+    Aplique boas práticas com variáveis e templates
+    Reutilize tarefas com roles
+    Crie ambientes complexos com um simples script
+    Faça deploys com Ansible
+
+Aulas
+
+    Primeiros passos com Ansible 
+
+0 / 10
+19min
+
+    Introdução
+    Por que usar Ansible
+    Sobre Ansible e infraestrutura como código
+    Um pouco mais sobre Ansible
+    Instalando Ansible e o primeiro comando
+    Executando o primeiro comando
+    Preparando o ambiente
+    Mãos na massa: Começando com Ansible
+    Erro UNREACHABLE?
+    O que aprendemos?
+
+Criação do primeiro Playbook
+0 / 8
+17min
+
+    Projeto da aula anterior
+    O primeiro Playbook
+    Criando um Playbook
+    Instalando dependências
+    O Playbook está correto?
+    Palavras-chave do Ansible e os seus usos
+    Mãos na massa: Instalando dependências
+    O que aprendemos?
+
+Aplicando boas práticas
+0 / 8
+11min
+
+    Projeto da aula anterior
+    Simplificando o playbook with_items
+    Sobre with_items
+    A variável item
+    Para saber mais: Novo Loop
+    Trabalhando com vários logins
+    Mãos na massa: Enxugando nosso código
+    O que aprendemos?
+
+Preparando o banco de dados
+0 / 9
+18min
+
+    Projeto da aula anterior
+    Configuração do banco de dados
+    Documentação dos módulos
+    Criando um banco
+    Criação do usuário no banco
+    Permissão para o usuário do MySQL
+    Criação de um usuário do MySQL
+    Mãos na massa: Utilizando banco
+    O que aprendemos?
+
+Instalação do servidor e deploy da aplicação
+0 / 9
+34min
+
+    Projeto da aula anterior
+    Download e instalação da aplicação
+    Sobre o código
+    Alterando a configuração no Host
+    Jogo dos erros
+    Reiniciando serviços com Handlers
+    O handler está correto?
+    Mãos na massa: Incrementando nosso código
+    O que aprendemos?
+
+Separando banco e aplicação
+0 / 7
+21min
+
+    Projeto da aula anterior
+    Separando banco e aplicação
+    Reinstalando o servidor com um click
+    Sobre Handlers
+    Executando o mesmo comando contra vários hosts remotos
+    Mãos na massa: Fazendo a separação do banco e da aplicação
+    O que aprendemos?
+
+Trabalhando com variáveis e templates
+0 / 10
+20min
+
+    Projeto da aula anterior
+    Configurações flexíveis com variáveis
+    Sobre variáveis
+    Gerando configurações com templates
+    Sobre templates
+    Sobre variáveis #2
+    Mãos na massa: Refatorando o código
+    Para saber mais: Variáveis
+    Para saber mais: Jinja
+    O que aprendemos?
+
+Usando roles, dependências e defaults
+0 / 9
+20min
