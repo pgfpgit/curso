@@ -1,5 +1,12 @@
 ---
 - hosts: all
+  handlers:
+    - name: restart apache
+      service:
+        name: apache2
+        state: restarted
+      become: yes  
+            
   tasks:
     - name: 'Instala pacotes de dependencia do sistema operacional'
       apt:
@@ -32,7 +39,8 @@
     
     - name: 'Download do Wordpress'
       get_url:
-        url: 'https://wordpress.org/latest.tar.gz'
+        #url: 'https://wordpress.org/latest.tar.gz'
+        url: https://wordpress.org/wordpress-5.0.tar.gz
         dest: '/tmp/wordpress.tar.gz'
         
     - name: 'Descompactando o Wordpress'
@@ -59,4 +67,9 @@
         - { regex: 'password_here', value: '12345'}
       become: yes
         
-        
+    - copy: 
+        src: 'files/000-default.conf'
+        dest: '/etc/apache2/sites-available/000-default.conf'
+      become: yes
+      notify:
+        - restart apache
