@@ -2,6 +2,10 @@ ansible -vvvv wordpress -u vagrant --private-key private_key -i hosts -m shell -
 
 ansible-playbook provisioning.yml -u vagrant  -i hosts --private-key private_key
 
+ansible-playbook -i hosts --extra-vars 'wp_db_name=wordpress_db wp_username=wordpress_user' provisioning.yml 
+
+
+
 
 Copiando chave da vm mysql para o ansible
 vagrant@ansible:~$ cp /vagrant/.vagrant/machines/mysql/virtualbox/private_key /home/vagrant/db_private_key
