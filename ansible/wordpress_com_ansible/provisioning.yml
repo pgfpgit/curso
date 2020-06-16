@@ -1,5 +1,51 @@
 ---
-- hosts: all
+- hosts: database
+  handlers:
+    - name: restart mysql
+      service:
+        name: mysql
+        state: restarted
+      become: yes
+      
+  tasks:
+    - name: 'Instala pacotes de dependencia do sistema operacional'
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600 #1 hora
+        name: "{{ item }}"
+        state: latest
+      become: yes
+      with_items:
+        - mysql-server-5.6
+        - python-mysqldb
+        
+    - name: 'Cria o banco do MySQL'
+      mysql_db:
+        name: wordpress_db
+        login_user: root
+        state: present
+
+    - name: 'Cria o usuário do MySQL'
+      mysql_user:
+        login_user: root
+        name: wordpress_user
+        password: 12345
+        priv: 'wordpress_db.*:ALL'
+        state: present
+        host: "{{ item }}"
+      with_items:
+       - 'localhost'
+       - '127.0.0.1'
+       - '10.10.2.41'
+    - name: 'Configura MySQL para aceitar conexões remotas'
+      copy:
+        src: 'files/my.cnf'
+        dest: '/etc/mysql/my.cnf'
+      become: yes
+      notify:
+        - restart mysql
+
+- hosts: wordpress
   handlers:
     - name: restart apache
       service:
@@ -17,25 +63,9 @@
         - php5-gd
         - libssh2-php
         - php5-mcrypt
-        - mysql-server-5.6
-        - python-mysqldb
         - php5-mysql
         state: latest
       become: yes
-      
-    - name: 'Cria o banco do MySQL'
-      mysql_db:
-        name: wordpress_db
-        login_user: root
-        state: present
-
-    - name: 'Cria o usuário MySQL'
-      mysql_user:
-        login_user: root
-        name: wordpress_user
-        password: 12345
-        priv: 'wordpress_db.*:ALL'
-        state: present
     
     - name: 'Download do Wordpress'
       get_url:
@@ -65,6 +95,7 @@
         - { regex: 'database_name_here', value: 'wordpress_db'}
         - { regex: 'username_here', value: 'wordpress_user'}
         - { regex: 'password_here', value: '12345'}
+        - { regex: 'localhost', value: '10.10.2.42'}
       become: yes
         
     - copy: 

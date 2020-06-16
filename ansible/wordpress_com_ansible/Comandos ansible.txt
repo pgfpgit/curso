@@ -1,3 +1,10 @@
 ansible -vvvv wordpress -u vagrant --private-key private_key -i hosts -m shell -a 'echo Hello, World'
 
 ansible-playbook provisioning.yml -u vagrant  -i hosts --private-key private_key
+
+
+Copiando chave da vm mysql para o ansible
+vagrant@ansible:~$ cp /vagrant/.vagrant/machines/mysql/virtualbox/private_key /home/vagrant/db_private_key
+vagrant@ansible:~$ chmod 600 /home/vagrant/db_private_key
+Apagar a segunda linha:
+vagrant@ansible:~$ vim .ssh/known_hosts  
