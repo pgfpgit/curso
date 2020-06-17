@@ -2,4 +2,5 @@
 private_key
 id_bionic
 id_bionic.pub
-/d/curso/terraform/terraform-aws.pub
+terraform/terraform-aws.pub
+terraform/.terraform/
