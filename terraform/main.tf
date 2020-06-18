@@ -75,6 +75,15 @@ resource "aws_instance" "dev7" {
 }
 */
 
+resource "aws_s3_bucket" "homologacao" {
+  bucket = "pedrolabs-homologacao"
+  acl    = "private"
+
+  tags = {
+    Name = "pedrolabs-homologacao"
+  }
+}
+
 resource "aws_dynamodb_table" "dynamodb-homologacao" {
   provider = aws.us-east-2
   name           = "GameScores"
