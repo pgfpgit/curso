@@ -1,0 +1,111 @@
+Infraestrutura ágil com Docker e Kubernetes
+
+Chegou a parte do famoso Docker! Você aprenderá a criar e gerenciar containers em forma de receitas e scripts, os fará a comunicarem entre si. 
+As imagens Docker representam uma forma uniforme e leve de empacotar uma aplicação que não pode faltar nessa formação.
+
+As ferramentas Kubernetes e Docker Swarm são orquestradores de containers para aumentar a disponibilidade e escalabilidade deles.
+
+
+Docker Engine
+
+Isso aí! Essa é a tecnologia mais famosa e responsável por fazer o meio de campo entre os containers e o SO.
+Alternativa correta
+
+Docker Hub
+
+Isso aí! O Docker Hub provê um repositório com muitas aplicações para você usar em sua infraestrutura.
+Alternativa correta
+
+Docker Swarm
+
+Isso aí! Essa tecnologia permite o uso de múltiplos docker hosts.
+
+
+https://labs.play-with-docker.com/
+
+COMANDOS Docker:
+
+docker version - exibe a versão do docker.
+docker run NOME_DA_IMAGEM - cria um container com a respectiva imagem passada como parâmetro. 
+
+docker run ubuntu
+
+docker ps
+
+docker ps -a
+
+docker run ubuntu echo "Ola Mundo"
+
+docker run -it ubuntu
+
+docker stop <id do container>
+
+
+
+Para remover todos os containers existentes
+docker container prune
+root@dockerhost:~# docker run -d -P dockersamples/static-site
+314f4ce805c63d91a5948f717c9f6d56d7be39cb45c4af9f208ef652a3251ca3
+root@dockerhost:~# docker ps
+CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                                           NAMES
+314f4ce805c6        dockersamples/static-site   "/bin/sh -c 'cd /usr…"   8 seconds ago       Up 6 seconds        0.0.0.0:32769->80/tcp, 0.0.0.0:32768->443/tcp   quirky_feistel
+
+Outro exemplo:
+root@dockerhost:~# docker container prune
+WARNING! This will remove all stopped containers.
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+314f4ce805c63d91a5948f717c9f6d56d7be39cb45c4af9f208ef652a3251ca3
+d68ccf8929b75860f06decfec29db88d947756f4f9ec81ff783a82a279982a52
+aa8107dc5637915b722303875e076b43c9914370f3f270ac92e6eea43f0fa282
+1947df30fc45b524e1dc3653fc7bdf5c4ecbfba3de9903ff0aecdecd28badef8
+
+Total reclaimed space: 26.25kB
+
+
+Para saber quais portas estão sendo usadas por um container específico:
+root@dockerhost:~# docker port 314f4ce805c6
+443/tcp -> 0.0.0.0:32768
+80/tcp -> 0.0.0.0:32769
+
+Para passar um port-foward para o docker
+root@dockerhost:~# docker run -d -p 12345:80 --name meu-site dockersamples/static-site
+728775d41b875f09e47ff5b1c2e2d773c5a89dd236edb41e881d220363dd7a28
+root@dockerhost:~# docker ps
+CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                            NAMES
+728775d41b87        dockersamples/static-site   "/bin/sh -c 'cd /usr…"   5 seconds ago       Up 4 seconds        443/tcp, 0.0.0.0:12345->80/tcp   meu-site
+root@dockerhost:~#
+
+
+Para parar todos os containers que estão executando
+root@dockerhost:~# docker stop -t0 $(docker ps -q)
+eff3c7b1a4c3
+5a525b6fc92c
+
+Lista de comandos e resumo:
+==============================
+Segue também uma breve lista dos comandos utilizados:
+
+    docker ps - exibe todos os containers em execução no momento.
+
+    docker ps -a - exibe todos os containers, independentemente de estarem em execução ou não.
+
+    docker run -it NOME_DA_IMAGEM - conecta o terminal que estamos utilizando com o do container.
+
+    docker start ID_CONTAINER - inicia o container com id em questão.
+
+    docker stop ID_CONTAINER - interrompe o container com id em questão.
+
+    docker start -a -i ID_CONTAINER - inicia o container com id em questão e integra os terminais, além de permitir interação entre ambos.
+
+    docker rm ID_CONTAINER - remove o container com id em questão.
+
+    docker container prune - remove todos os containers que estão parados.
+
+    docker rmi NOME_DA_IMAGEM - remove a imagem passada como parâmetro.
+
+    docker run -d -P --name NOME dockersamples/static-site - ao executar, dá um nome ao container.
+
+    docker run -d -p 12345:80 dockersamples/static-site - define uma porta específica para ser atribuída à porta 80 do container, neste caso 12345.
+
+    docker run -d -P -e AUTHOR="Fulano" dockersamples/static-site - define uma variável de ambiente AUTHOR com o valor Fulano no container criado.
