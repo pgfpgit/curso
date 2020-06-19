@@ -4,3 +4,4 @@ id_bionic
 id_bionic.pub
 terraform/terraform-aws.pub
 terraform/.terraform/
+docker/.vagrant
