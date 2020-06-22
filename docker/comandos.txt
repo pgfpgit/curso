@@ -109,8 +109,13 @@ Segue também uma breve lista dos comandos utilizados:
     docker run -d -p 12345:80 dockersamples/static-site - define uma porta específica para ser atribuída à porta 80 do container, neste caso 12345.
 
     docker run -d -P -e AUTHOR="Fulano" dockersamples/static-site - define uma variável de ambiente AUTHOR com o valor Fulano no container criado.
-
+    
 Salvando dados com volumes
+
+    Comandos:
+    docker run -v "[CAMINHO_VOLUME_LOCAL:]CAMINHO_VOLUME_CONTAINER" NOME_DA_IMAGEM - cria um volume no respectivo caminho do container, caso seja especificado um caminho local monta o volume local no volume do container.
+
+    docker inspect ID_CONTAINER - retorna diversas informações sobre o container.
 
     docker run -v "/var/www" ubuntu
 
@@ -135,5 +140,72 @@ Executando aplicação node localizada no D:\curso\docker\volume-exemplo
     d97543a98cc3        node                "docker-entrypoint.s…"   5 seconds ago       Up 4 seconds        0.0.0.0:8080->3000/tcp   stupefied_torvalds
 
     
+Trabalhando com nossas imagens
+
+    root@dockerhost:/vagrant# docker images
+    REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+    ubuntu              latest              74435f89ab78        5 days ago          73.9MB
+    centos              latest              831691599b88        5 days ago          215MB
+    node                latest              dcda6cd5e439        12 days ago         942MB
+    hello-world         latest              bf756fb1ae65        5 months ago        13.3kB
+
+
+Building my image pedrop/node
+    Docker build -f Dockerfile -t pedrop/node .
+
+root@dockerhost:/vagrant/volume-exemplo# docker build -f Dockerfile -t pedrop/node .
+Sending build context to Docker daemon  6.144kB
+Step 1/7 : FROM node:latest
+ ---> dcda6cd5e439
+Step 2/7 : MAINTAINER Pedro Paiva
+ ---> Using cache
+ ---> b521335be770
+Step 3/7 : COPY . /var/www/
+ ---> 819b07f10ca6
+Step 4/7 : WORKDIR = /var/www
+ ---> Running in 9df245bf6c05
+Removing intermediate container 9df245bf6c05
+ ---> 6d7237aacada
+Step 5/7 : RUN npm install
+ ---> Running in 73256771fff5
+npm WARN saveError ENOENT: no such file or directory, open '/= /var/www/package.json'
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN enoent ENOENT: no such file or directory, open '/= /var/www/package.json'
+npm WARN www No description
+npm WARN www No repository field.
+npm WARN www No README data
+npm WARN www No license field.
+
+up to date in 0.673s
+found 0 vulnerabilities
+
+Removing intermediate container 73256771fff5
+ ---> 27042a2a0881
+Step 6/7 : ENTRYPOINT npm start
+ ---> Running in 3ec6f5240df4
+Removing intermediate container 3ec6f5240df4
+ ---> 918b314303fb
+Step 7/7 : EXPOSE 3000
+ ---> Running in a98b2f472eba
+Removing intermediate container a98b2f472eba
+ ---> 9ffc60e8445a
+Successfully built 9ffc60e8445a
+Successfully tagged pedrop/node:lates
+
+root@dockerhost:/vagrant/volume-exemplo# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+pedrop/node         latest              9ffc60e8445a        19 seconds ago      942MB
+ubuntu              latest              74435f89ab78        5 days ago          73.9MB
+centos              latest              831691599b88        5 days ago          215MB
+node                latest              dcda6cd5e439        13 days ago         942MB
+hello-world         latest              bf756fb1ae65        5 months ago        13.3kB
+
+Executando minha imagem
+root@dockerhost:/vagrant/volume-exemplo# docker run -d -p 8080:3000 pedrop/node
+e6dce2e92023c9a4b87b4dae6ddf43e90a15ca55e98b8f02e2e3b25e803d9a67
+root@dockerhost:/vagrant/volume-exemplo#
+
+
+
 
 
