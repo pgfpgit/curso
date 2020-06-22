@@ -109,3 +109,31 @@ Segue também uma breve lista dos comandos utilizados:
     docker run -d -p 12345:80 dockersamples/static-site - define uma porta específica para ser atribuída à porta 80 do container, neste caso 12345.
 
     docker run -d -P -e AUTHOR="Fulano" dockersamples/static-site - define uma variável de ambiente AUTHOR com o valor Fulano no container criado.
+
+Salvando dados com volumes
+
+    docker run -v "/var/www" ubuntu
+
+    docker inspect <id contaner>
+
+    docker run -it -v "D:\curso\docker:/var/www" ubuntu
+    
+    docker run -it -v "/vagrant/html:/var/www" ubuntu
+
+    docker run -it -v "C:\Users\Alura\Desktop:/var/www" ubuntu
+
+Executando aplicação node localizada no D:\curso\docker\volume-exemplo
+
+    docker run -p -d 8080:3000 -v "D:\curso\docker\volume-exemplo:/var/www" -w "/var/www" node npm start
+
+    docker run -d -p 8080:3000 -v "/vagrant/volume-exemplo:/var/www" -w "/var/www" node npm start
+
+    root@dockerhost:~# docker run -d -p 8080:3000 -v "/vagrant/volume-exemplo:/var/www" -w "/var/www" node npm start
+    d97543a98cc3682f89cdc4fb9e68283e51157ae6cf263f64c10528c5ea21a803
+    root@dockerhost:~# docker ps
+    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+    d97543a98cc3        node                "docker-entrypoint.s…"   5 seconds ago       Up 4 seconds        0.0.0.0:8080->3000/tcp   stupefied_torvalds
+
+    
+
+
