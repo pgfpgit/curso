@@ -202,10 +202,30 @@ hello-world         latest              bf756fb1ae65        5 months ago        
 
 Executando minha imagem
 root@dockerhost:/vagrant/volume-exemplo# docker run -d -p 8080:3000 pedrop/node
-e6dce2e92023c9a4b87b4dae6ddf43e90a15ca55e98b8f02e2e3b25e803d9a67
+f12da9e3503c9968019bf244fd75c50fe8c5683355dc94ad8feabb14d61d0f4c
+root@dockerhost:/vagrant/volume-exemplo# docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES
+f12da9e3503c        pedrop/node         "npm start"         5 seconds ago       Up 4 seconds        0.0.0.0:8080->3000/tcp   objective_volhard
 root@dockerhost:/vagrant/volume-exemplo#
 
+Acessando o container:
+http://192.168.15.40:8080/
 
-
+Comunicação entre containers
+===============================
+root@dockerhost:/vagrant# docker run -d --name meu-mongo --network minha-rede mongo
+70eb85228dc20f1365a6337cc63756149ae1304061de094232a2baa29959cacb
+root@dockerhost:/vagrant# docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+70eb85228dc2        mongo               "docker-entrypoint.s…"   6 seconds ago       Up 4 seconds        27017/tcp           meu-mongo
+root@dockerhost:/vagrant# docker run --network minha-rede -d -p 8080:3000 douglasq/alura-books:cap05
+7f2499809bea6218a8f061cad91a921b52f346123ddfff46d5b77d17b45246da
+root@dockerhost:/vagrant#
+root@dockerhost:/vagrant#
+root@dockerhost:/vagrant# docker ps
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                    NAMES
+7f2499809bea        douglasq/alura-books:cap05   "npm start"              22 seconds ago      Up 20 seconds       0.0.0.0:8080->3000/tcp   festive_newton
+70eb85228dc2        mongo                        "docker-entrypoint.s…"   53 seconds ago      Up 51 seconds       27017/tcp                meu-mongo
+root@dockerhost:/vagrant#
 
 
