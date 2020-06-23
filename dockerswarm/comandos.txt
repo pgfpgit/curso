@@ -1,0 +1,374 @@
+Comandos para instalação do Docker Toolbox e Docker Machine:
+==============================================================================
+
+A) Instalando no Ubuntu
+
+base=https://github.com/docker/machine/releases/download/v0.16.0 &&
+
+curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
+
+sudo mv /tmp/docker-machine /usr/local/bin/docker-machine &&
+
+chmod +x /usr/local/bin/docker-machine
+
+
+Versão instalada do docker machine:
+==============================================================================
+root@dockerhost:~# docker-machine version
+docker-machine version 0.16.0, build 702c267f
+
+B) Instalando no Docker Tools no Windows 7 (64 Bits)
+
+Acessar https://docs.docker.com/toolbox/toolbox_install_windows/ e seguir o procedimento.
+
+Instalador: https://github.com/docker/toolbox/releases/download/v19.03.1/DockerToolbox-19.03.1.exe
+
+Versão instalada do docker machine:
+==============================================================================
+pedro@phantro MINGW64 /c/Program Files/Docker Toolbox
+$ docker version
+Client:
+ Version:           19.03.1
+ API version:       1.40
+ Go version:        go1.12.7
+ Git commit:        74b1e89e8a
+ Built:             Wed Jul 31 15:18:18 2019
+ OS/Arch:           windows/amd64
+ Experimental:      false
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          19.03.5
+  API version:      1.40 (minimum version 1.12)
+  Go version:       go1.12.12
+  Git commit:       633a0ea838
+  Built:            Wed Nov 13 07:28:45 2019
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          v1.2.10
+  GitCommit:        b34a5c8af56e510852c35414db4c1f4fa6172339
+ runc:
+  Version:          1.0.0-rc8+dev
+  GitCommit:        3e425f80a8c931f88e6d94a8c831b9d5aa481657
+ docker-init:
+  Version:          0.18.0
+  GitCommit:        fec3683
+
+pedro@phantro MINGW64 /c/Program Files/Docker Toolbox
+$ docker-machine version
+docker-machine.exe version 0.16.1, build cce350d7
+
+pedro@phantro MINGW64 /c/Program Files/Docker Toolbox
+$ docker-compose version
+docker-compose version 1.24.1, build 4667896b
+docker-py version: 3.7.3
+CPython version: 3.6.8
+OpenSSL version: OpenSSL 1.0.2q  20 Nov 2018
+
+
+
+
+Criando primeira VM com Docker machine
+==============================================================================
+
+1 - Listando as docker machines já existentes
+docker-machine ls
+
+$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+default   *        virtualbox   Running   tcp://192.168.99.100:2376           v19.03.5
+
+pedro@phantro MINGW64 ~
+
+pedro@phantro MINGW64 ~
+$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+default   *        virtualbox   Running   tcp://192.168.99.100:2376           v19.03.5
+vm1       -        virtualbox   Running   tcp://192.168.99.101:2376           v19.03.5
+
+pedro@phantro MINGW64 ~
+
+
+2 - Criando uma docker machine. 
+docker-machine create -d virtualbox vm1
+
+pedro@phantro MINGW64 ~
+$ docker-machine create -d virtualbox vm1
+Running pre-create checks...
+Creating machine...
+(vm1) Copying C:\Users\pedro\.docker\machine\cache\boot2docker.iso to C:\Users\pedro\.docker\machine\machines\vm1\boot2docker.iso...
+(vm1) Creating VirtualBox VM...
+(vm1) Creating SSH key...
+(vm1) Starting the VM...
+(vm1) Check network to re-create if needed...
+(vm1) Waiting for an IP...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with boot2docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: C:\Program Files\Docker Toolbox\docker-machine.exe env vm1
+
+pedro@phantro MINGW64 ~
+$
+
+3 - Para iniciar uma docker machine
+docker-machine start vm1
+
+4 - Acessando uma docker machine já criada
+docker-machine ssh vm1
+
+pedro@phantro MINGW64 ~
+$ docker-machine ssh vm1
+   ( '>')
+  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+ (/-_--_-\)           www.tinycorelinux.net
+
+docker@vm1:~$
+
+5 - Criando meu primeiro Swarm
+
+    5.1 - Acessar a VM1
+    pedro@phantro MINGW64 ~
+    $ docker-machine ssh vm1
+     ( '>')
+    /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+   (/-_--_-\)           www.tinycorelinux.net
+
+    docker@vm1:~$
+
+    5.2 - Comando para iniciar o Swarm
+    docker@vm1:~$ docker swarm init
+    Error response from daemon: could not choose an IP address to advertise since this system has multiple addresses
+    on different interfaces (10.0.2.15 on eth0 and 192.168.99.101 on eth1) - specify one with --advertise-addr
+    docker@vm1:~$
+
+    É necessário escolher a interface    
+
+    docker@vm1:~$ docker swarm init --advertise-addr 192.168.99.101
+    Swarm initialized: current node (trnld9swx304s0qmbsk3roer8) is now a manager.
+
+    To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-49rrfgce552b1d4mb9v8h8rn7sgpz0trjqwxctl4pqvs4gqnhu-35mith8eyx4nuy0xobquphtye 192.168.99.101:2377
+
+    To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+    docker@vm1:~$
+
+    5.3 - Para obter informações sobre o nó
+    docker@vm1:~$ docker info
+    Client:
+    Debug Mode: false
+
+    Server:
+    Containers: 0
+    Running: 0
+    Paused: 0
+    Stopped: 0
+    Images: 0
+    Server Version: 19.03.5
+    Storage Driver: overlay2
+    Backing Filesystem: extfs
+    Supports d_type: true
+    Native Overlay Diff: true
+    Logging Driver: json-file
+    Cgroup Driver: cgroupfs
+    Plugins:
+    Volume: local
+    Network: bridge host ipvlan macvlan null overlay
+    Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+    Swarm: active
+    NodeID: trnld9swx304s0qmbsk3roer8
+    Is Manager: true
+    ClusterID: siogtj74jon41qlue7bllishw
+    Managers: 1
+    Nodes: 1
+    Default Address Pool: 10.0.0.0/8
+    SubnetSize: 24
+    Data Path Port: 4789
+    Orchestration:
+    Task History Retention Limit: 5
+    Raft:
+    Snapshot Interval: 10000
+    Number of Old Snapshots to Retain: 0
+    Heartbeat Tick: 1
+    Election Tick: 10
+    Dispatcher:
+    Heartbeat Period: 5 seconds
+    CA Configuration:
+    Expiry Duration: 3 months
+    Force Rotate: 0
+    Autolock Managers: false
+    Root Rotation In Progress: false
+    Node Address: 192.168.99.101
+    Manager Addresses:
+    192.168.99.101:2377
+    Runtimes: runc
+    Default Runtime: runc
+    Init Binary: docker-init
+    containerd version: b34a5c8af56e510852c35414db4c1f4fa6172339
+    runc version: 3e425f80a8c931f88e6d94a8c831b9d5aa481657
+    init version: fec3683
+    Security Options:
+    seccomp
+    Profile: default
+    Kernel Version: 4.14.154-boot2docker
+    Operating System: Boot2Docker 19.03.5 (TCL 10.1)
+    OSType: linux
+    Architecture: x86_64
+    CPUs: 1
+    Total Memory: 989.5MiB
+    Name: vm1
+    ID: HKGG:QRP4:TS3U:47PB:DWHU:R5PM:2A5Y:2VIP:DET2:46QB:2NXV:DOH3
+    Docker Root Dir: /mnt/sda1/var/lib/docker
+    Debug Mode: false
+    Registry: https://index.docker.io/v1/
+    Labels:
+    provider=virtualbox
+    Experimental: false
+    Insecure Registries:
+    127.0.0.0/8
+    Live Restore Enabled: false
+    Product License: Community Engine
+
+    docker@vm1:~$
+
+6 - Criando os workers do meu primeiro Swarm
+
+    6.1 - Criar as VMs nós
+    docker-machine create -d virtualbox vm2
+    docker-machine create -d virtualbox vm3
+
+    pedro@phantro MINGW64 ~
+    $ docker-machine create -d virtualbox vm2
+    Running pre-create checks...
+    Creating machine...
+    (vm2) Copying C:\Users\pedro\.docker\machine\cache\boot2docker.iso to C:\Users\pedro\.docker\machine\machines\vm2\boot2docker.iso...
+    (vm2) Creating VirtualBox VM...
+    (vm2) Creating SSH key...
+    (vm2) Starting the VM...
+    (vm2) Check network to re-create if needed...
+    (vm2) Windows might ask for the permission to configure a dhcp server. Sometimes, such confirmation window is minimized in the taskbar.
+    (vm2) Waiting for an IP...
+    Waiting for machine to be running, this may take a few minutes...
+    Detecting operating system of created instance...
+    Waiting for SSH to be available...
+    Detecting the provisioner...
+    Provisioning with boot2docker...
+    Copying certs to the local machine directory...
+    Copying certs to the remote machine...
+    Setting Docker configuration on the remote daemon...
+    Checking connection to Docker...
+    Docker is up and running!
+    To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: C:\Program Files\Docker Toolbox\docker-machine.exe env vm2
+
+    pedro@phantro MINGW64 ~
+
+    pedro@phantro MINGW64 ~
+    $ docker-machine create -d virtualbox vm3
+    Running pre-create checks...
+    Creating machine...
+    (vm3) Copying C:\Users\pedro\.docker\machine\cache\boot2docker.iso to C:\Users\pedro\.docker\machine\machines\vm3\boot2docker.iso...
+    (vm3) Creating VirtualBox VM...
+    (vm3) Creating SSH key...
+    (vm3) Starting the VM...
+    (vm3) Check network to re-create if needed...
+    (vm3) Windows might ask for the permission to configure a dhcp server. Sometimes, such confirmation window is minimized in the taskbar.
+    (vm3) Waiting for an IP...
+    Waiting for machine to be running, this may take a few minutes...
+    Detecting operating system of created instance...
+    Waiting for SSH to be available...
+    Detecting the provisioner...
+    Provisioning with boot2docker...
+    Copying certs to the local machine directory...
+    Copying certs to the remote machine...
+    Setting Docker configuration on the remote daemon...
+    Checking connection to Docker...
+    Docker is up and running!
+    To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: C:\Program Files\Docker Toolbox\docker-machine.exe env vm3
+
+    pedro@phantro MINGW64 ~
+
+    pedro@phantro MINGW64 ~
+    $ docker-machine ls
+    NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+    default   *        virtualbox   Running   tcp://192.168.99.100:2376           v19.03.5
+    vm1       -        virtualbox   Running   tcp://192.168.99.101:2376           v19.03.5
+    vm2       -        virtualbox   Running   tcp://192.168.99.102:2376           v19.03.5
+    vm3       -        virtualbox   Running   tcp://192.168.99.103:2376           v19.03.5
+
+    pedro@phantro MINGW64 ~
+    $
+
+    6.2 - Adicionar os workers
+    
+    A) Adicionando o worker VM2
+    docker@vm2:~$ docker swarm join --token SWMTKN-1-49rrfgce552b1d4mb9v8h8rn7sgpz0trjqwxctl4pqvs4gqnhu-35mith8eyx4nuy0xobquphtye 192.168.99.101:2377
+    This node joined a swarm as a worker.
+    docker@vm2:~$
+
+    B) Adicionando o worker VM3
+    pedro@phantro MINGW64 ~
+    $ docker-machine ssh vm3
+    ( '>')
+    /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+    (/-_--_-\)           www.tinycorelinux.net
+
+    <gqnhu-35mith8eyx4nuy0xobquphtye 192.168.99.101:2377
+    This node joined a swarm as a worker.
+    docker@vm3:~$
+
+7 - Comando para exibir o token
+
+Acessar o nó master:
+docker-machine ssh vm1
+
+Comando:
+docker swarm join-token worker
+
+
+8 - Listando os workers do meu swarm
+docker node ls
+docker@vm1:~$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+trnld9swx304s0qmbsk3roer8 *   vm1                 Ready               Active              Leader              19.03.5
+zjg7tbxqe5lkts03qayhgfby3     vm2                 Ready               Active                                  19.03.5
+vmr3fksm2d8xbioaf28tak8b8     vm3                 Ready               Active                                  19.03.5
+docker@vm1:~$
+
+
+9 - Removendo um worker do meu swarm
+docker node rm <id do worker>
+
+docker@vm1:~$ docker node rm vmr3fksm2d8xbioaf28tak8b8
+Error response from daemon: rpc error: code = FailedPrecondition desc = node vmr3fksm2d8xbioaf28tak8b8 is not down and can't be removed
+docker@vm1:~$
+
+O worker só poderá ser removido se estiver com STATUS Down. Para isso, basta acessar o nó a ser removido (vm3) e
+usar o comando "docker swarm leave".
+docker@vm3:~$ docker swarm leave
+Node left the swarm.
+docker@vm3:~$
+
+
+Voltando para o nó manager, basta digitar o comando para remover o nó.
+
+docker@vm1:~$ docker node rm vmr3fksm2d8xbioaf28tak8b8
+vmr3fksm2d8xbioaf28tak8b8
+docker@vm1:~$
+
+Verificando o Swarm após a remoção
+docker@vm1:~$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+trnld9swx304s0qmbsk3roer8 *   vm1                 Ready               Active              Leader              19.03.5
+zjg7tbxqe5lkts03qayhgfby3     vm2                 Ready               Active                                  19.03.5
+docker@vm1:~$
+
+
