@@ -371,4 +371,201 @@ trnld9swx304s0qmbsk3roer8 *   vm1                 Ready               Active    
 zjg7tbxqe5lkts03qayhgfby3     vm2                 Ready               Active                                  19.03.5
 docker@vm1:~$
 
+10 - Executando o primeiro container
+
+No contexto local, seria executado o comando:
+docker container run -p 8080:3000 -d aluracursos/barbearia
+
+docker@vm2:~$ docker container run -p 8080:3000 -d aluracursos/barbearia
+Unable to find image 'aluracursos/barbearia:latest' locally
+latest: Pulling from aluracursos/barbearia
+8f91359f1fff: Pull complete
+3bfc330579f6: Pull complete
+dc642667e98e: Pull complete
+e2b98a2a2ac3: Pull complete
+03b3e44f7cb8: Pull complete
+917f35e75662: Pull complete
+d05680ac0055: Pull complete
+b1ac2108d32f: Pull complete
+Digest: sha256:888b472a59897796fa7ef82544db226d43abb3d312483442fa548d632a0df563
+Status: Downloaded newer image for aluracursos/barbearia:latest
+5f6595fe01c31792b26cdd9633a181a645fb481e77886e101498e62af859c7e0
+docker@vm2:~$
+
+docker@vm2:~$ docker container ls
+CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                    NAMES
+5f6595fe01c3        aluracursos/barbearia   "/bin/sh -c 'node se…"   52 seconds ago      Up 51 seconds       0.0.0.0:8080->3000/tcp   dreamy_tesla
+docker@vm2:~$
+
+
+Removendo o container recém alocado:
+
+docker container ls
+
+docker container rm <id do container> --force
+
+docker@vm2:~$ docker container ls
+CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                    NAMES
+5f6595fe01c3        aluracursos/barbearia   "/bin/sh -c 'node se…"   52 seconds ago      Up 51 seconds       0.0.0.0:8080->3000/tcp   dreamy_tesla
+docker@vm2:~$ docker container ls
+CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                    NAMES
+5f6595fe01c3        aluracursos/barbearia   "/bin/sh -c 'node se…"   11 minutes ago      Up 11 minutes       0.0.0.0:8080->3000/tcp   dreamy_tesla
+docker@vm2:~$
+docker@vm2:~$
+docker@vm2:~$ docker container rm 5f6595fe01c3 --force
+5f6595fe01c3
+docker@vm2:~$ docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+docker@vm2:~$
+
+
+Para criar o container no contexto do Swarm, deve-se especificar um serviço e só pode ser executado no nó manager:
+docker service create -p 8080:3000 aluracursos/barbearia
+docker@vm1:~$ docker service create -p 8080:3000 aluracursos/barbearia
+lcsaai6vp88xq6krr91w1awxj
+overall progress: 1 out of 1 tasks
+1/1: running   [==================================================>]
+verify: Service converged
+docker@vm1:~$
+
+
+Verificando nos nós é possível ver que o serviço criado está foi orquestrado e está executando o container no worker VM2
+docker@vm2:~$ docker container ls
+CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS               NAMES
+5bd437228b8d        aluracursos/barbearia:latest   "/bin/sh -c 'node se…"   35 seconds ago      Up 34 seconds                           nostalgic_hypatia.1.thhjx9z0786hsx6mtlzikfmez
+docker@vm2:~$
+
+docker@vm3:~$ docker container ls
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+docker@vm3:~$
+
+
+
+
+
+
+11 - Comando para verificar informações dos nós
+docker node inspect vm2
+
+docker@vm1:~$
+docker@vm1:~$ docker node inspect vm2
+[
+    {
+        "ID": "zjg7tbxqe5lkts03qayhgfby3",
+        "Version": {
+            "Index": 15
+        },
+        "CreatedAt": "2020-06-23T14:46:57.819787995Z",
+        "UpdatedAt": "2020-06-23T14:46:57.861005634Z",
+        "Spec": {
+            "Labels": {},
+            "Role": "worker",
+            "Availability": "active"
+        },
+        "Description": {
+            "Hostname": "vm2",
+            "Platform": {
+                "Architecture": "x86_64",
+                "OS": "linux"
+            },
+            "Resources": {
+                "NanoCPUs": 1000000000,
+                "MemoryBytes": 1037537280
+            },
+            "Engine": {
+                "EngineVersion": "19.03.5",
+                "Labels": {
+                    "provider": "virtualbox"
+                },
+                "Plugins": [
+                    {
+                        "Type": "Log",
+                        "Name": "awslogs"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "fluentd"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "gcplogs"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "gelf"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "journald"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "json-file"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "local"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "logentries"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "splunk"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "syslog"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "bridge"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "host"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "ipvlan"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "macvlan"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "null"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "overlay"
+                    },
+                    {
+                        "Type": "Volume",
+                        "Name": "local"
+                    }
+                ]
+            },
+            "TLSInfo": {
+                "TrustRoot": "-----BEGIN CERTIFICATE-----\nMIIBazCCARCgAwIBAgIUIY3oKoWP5s7RpCvuVYAO/AHvRm8wCgYIKoZIzj0EAwIw\nEzERMA8GA1UEAxMIc3dhcm0tY2EwHhcNMjAwNjIzMTQyNTAwWhcNNDAwNjE4MTQy\nNTAwWjATMREwDwYDVQQDEwhzd2FybS1jYTBZMBMGByqGSM49AgEGCCqGSM49AwEH\nA0IABPW3kyVuXfCEEnPjoJJLLPnZqAt6pepMD/we5bx18wahVBz16WiLMdT7rV/M\njidAHlVNpw772qp65sA77OwdCX+jQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB\nAf8EBTADAQH/MB0GA1UdDgQWBBRuKh0UpgAKiYqYJLk1hCgF8aUcNTAKBggqhkjO\nPQQDAgNJADBGAiEAg/8QA7a9fucT23DNlED6D2y1lGU3VNydoeoXB2AClqICIQDT\nTdz4UXJONx61RgwNR1tUCPdhGF9TgUkQKm56AgvzCw==\n-----END CERTIFICATE-----\n",
+                "CertIssuerSubject": "MBMxETAPBgNVBAMTCHN3YXJtLWNh",
+                "CertIssuerPublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9beTJW5d8IQSc+Ogkkss+dmoC3ql6kwP/B7lvHXzBqFUHPXpaIsx1PutX8yOJ0AeVU2nDvvaqnrmwDvs7B0Jfw=="
+            }
+        },
+        "Status": {
+            "State": "ready",
+            "Addr": "192.168.99.102"
+        }
+    }
+]
+docker@vm1:~$
+
+
+
+
+
+
+
 

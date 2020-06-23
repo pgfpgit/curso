@@ -5,3 +5,4 @@ id_bionic.pub
 terraform/terraform-aws.pub
 terraform/.terraform/
 docker/.vagrant
+docker/alura-docker/package.json
