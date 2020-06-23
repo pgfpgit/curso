@@ -428,8 +428,21 @@ overall progress: 1 out of 1 tasks
 verify: Service converged
 docker@vm1:~$
 
+Verificando o status do serviço recém criado.
+docker@vm1:~$ docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE                          PORTS
+lcsaai6vp88x        nostalgic_hypatia   replicated          1/1                 aluracursos/barbearia:latest   *:8080->3000/tcp
+docker@vm1:~$
 
-Verificando nos nós é possível ver que o serviço criado está foi orquestrado e está executando o container no worker VM2
+Verificando a task recém criada
+docker service ps lcsaai6vp88x
+
+docker@vm1:~$ docker service ps lcsaai6vp88x
+ID                  NAME                  IMAGE                          NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
+thhjx9z0786h        nostalgic_hypatia.1   aluracursos/barbearia:latest   vm2                 Running             Running 19 minutes ago
+docker@vm1:~$
+
+Verificando no nó VM2 é possível ver que o serviço criado foi orquestrado e está executando o container no worker VM2
 docker@vm2:~$ docker container ls
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS               NAMES
 5bd437228b8d        aluracursos/barbearia:latest   "/bin/sh -c 'node se…"   35 seconds ago      Up 34 seconds                           nostalgic_hypatia.1.thhjx9z0786hsx6mtlzikfmez
@@ -438,8 +451,6 @@ docker@vm2:~$
 docker@vm3:~$ docker container ls
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 docker@vm3:~$
-
-
 
 
 
@@ -560,6 +571,32 @@ docker@vm1:~$ docker node inspect vm2
         }
     }
 ]
+docker@vm1:~$
+
+12 - Tarefas de Routing e Mesh 
+
+As requisições que chegam ao contexto swarm são redicionadas para as portas dos containers.
+
+                    ===========> 192.168.99.101:8080
+                    ||
+    8080 ===> ROUTING MESH ====> 192.168.99.102:8080
+                    ||
+                    ===========> 192.168.99.103:8080
+
+Ao parar um container local ele é orquestrado para outro nó:
+
+docker@vm2:~$ docker container ls
+CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS               NAMES
+5bd437228b8d        aluracursos/barbearia:latest   "/bin/sh -c 'node se…"   35 seconds ago      Up 34 seconds                           nostalgic_hypatia.1.thhjx9z0786hsx6mtlzikfmez
+docker@vm2:~$ docker container rm 5bd437228b8d --force
+5bd437228b8d
+docker@vm2:~$
+
+O conteainer foi orquestrado para o worker 2 novamente:
+docker@vm1:~$ docker service ps lcsaai6vp88x
+ID                  NAME                      IMAGE                          NODE                DESIRED STATE       CURRENT STATE                ERROR                         PORTS
+9135v8a67z3p        nostalgic_hypatia.1       aluracursos/barbearia:latest   vm2                 Running             Running about a minute ago
+thhjx9z0786h         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   vm2                 Shutdown            Failed about a minute ago    "task: non-zero exit (137)"
 docker@vm1:~$
 
 
