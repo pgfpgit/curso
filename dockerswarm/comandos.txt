@@ -583,6 +583,10 @@ As requisições que chegam ao contexto swarm são redicionadas para as portas d
                     ||
                     ===========> 192.168.99.103:8080
 
+Exercício:
+Qual artifício do Docker Swarm permite que nós possamos acessar quaisquer serviços a partir do IP de qualquer nó dentro do swarm, apenas informando a porta?
+Alternativa correta! Graças ao Routing Mesh conseguimos acessar diferentes serviços a partir de qualquer IP pertencente ao swarm.
+
 Ao parar um container local ele é orquestrado para outro nó:
 
 docker@vm2:~$ docker container ls
