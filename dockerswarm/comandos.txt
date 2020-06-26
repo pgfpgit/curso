@@ -701,6 +701,29 @@ vm3 Down
 vm4 Ready
 vm5 Ready
 
+Removendo nós não utilizados com status "Down"
+docker@vm1:~$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+trnld9swx304s0qmbsk3roer8 *   vm1                 Ready               Active              Leader              19.03.5
+zke1wht8zjq2fmjwaj637emty     vm2                 Ready               Active              Reachable           19.03.5
+zjg7tbxqe5lkts03qayhgfby3     vm2                 Down                Active                                  19.03.5
+opfmg2f434a0ketavd0x1hku7     vm3                 Ready               Active              Reachable           19.03.5
+pk03xo0a2651r9g35apmr4h5t     vm3                 Down                Active                                  19.03.5
+hrbqkdkcyik3lxc2wsylec69l     vm4                 Ready               Active                                  19.03.5
+f03s69shr0309sj3qa3hmp67i     vm5                 Ready               Active                                  19.03.5
+docker@vm1:~$ docker node rm zjg7tbxqe5lkts03qayhgfby3
+zjg7tbxqe5lkts03qayhgfby3
+docker@vm1:~$ docker node rm pk03xo0a2651r9g35apmr4h5t
+pk03xo0a2651r9g35apmr4h5t
+docker@vm1:~$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+trnld9swx304s0qmbsk3roer8 *   vm1                 Ready               Active              Leader              19.03.5
+zke1wht8zjq2fmjwaj637emty     vm2                 Ready               Active              Reachable           19.03.5
+opfmg2f434a0ketavd0x1hku7     vm3                 Ready               Active              Reachable           19.03.5
+hrbqkdkcyik3lxc2wsylec69l     vm4                 Ready               Active                                  19.03.5
+f03s69shr0309sj3qa3hmp67i     vm5                 Ready               Active                                  19.03.5
+
+
 15 - Algoritmo de Consenso Raft
 
 Regras para eleição de novo líder do Swarm
@@ -713,7 +736,59 @@ Onde N = Número de Managers
 
 Recomendação do Docker = 3, 5 ou 7 Managers nunca acima de 10 por questão de desempenho
 
+Para 7 nós managers teríamos:
+3 Falhas
+4 Quorum
 
+16 - Separando as responsabilidades
+
+Para remover um nó manager do swarm temos 2 passos:
+1 - docker node demote vm1 (Rebaixar o nó)
+2 - docker node rm vm1 (Remove nó)
+
+17 - Alterando a disponibilidade de um manager
+
+Parando serviços em execução 
+docker service rm $(docker service -q)
+
+Restrigindo Nós:
+docker@vm1:~$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+trnld9swx304s0qmbsk3roer8 *   vm1                 Ready               Active              Leader              19.03.5
+zke1wht8zjq2fmjwaj637emty     vm2                 Ready               Active              Reachable           19.03.5
+opfmg2f434a0ketavd0x1hku7     vm3                 Ready               Active              Reachable           19.03.5
+hrbqkdkcyik3lxc2wsylec69l     vm4                 Ready               Active                                  19.03.5
+f03s69shr0309sj3qa3hmp67i     vm5                 Ready               Active                                  19.03.5
+docker@vm1:~$
+
+Comanado:
+docker@vm1:~$ docker node update --availability drain 
+
+Restrigindo Serviços:
+docker service update --constraint-add node.role==worker
+
+docker service update --constraint-add node.role==worker lcsaai6vp88x
+
+docker@vm1:~$ docker service ps lcsaai6vp88x
+ID                  NAME                      IMAGE                          NODE                        DESIRED STATE       CURRENT STATE          ERROR                         PORTS
+nzlrqksc46gk        nostalgic_hypatia.1       aluracursos/barbearia:latest   vm1                         Running             Running 2 hours ago
+9135v8a67z3p         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg7tbxqe5lkts03qayhgfby3   Shutdown            Shutdown 2 hours ago
+thhjx9z0786h         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg7tbxqe5lkts03qayhgfby3   Shutdown            Failed 2 days ago      "task: non-zero exit (137)"
+docker@vm1:~$ docker service update --constraint-add node.role==worker lcsaai6vp88x
+lcsaai6vp88x
+overall progress: 1 out of 1 tasks
+1/1: running   [==================================================>]
+verify: Service converged
+docker@vm1:~$ docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE                          PORTS
+lcsaai6vp88x        nostalgic_hypatia   replicated          1/1                 aluracursos/barbearia:latest   *:8080->3000/tcp
+docker@vm1:~$ docker service ps lcsaai6vp88x
+ID                  NAME                      IMAGE                          NODE                        DESIRED STATE       CURRENT STATE             ERROR                         PORTS
+1sdbwor05x1b        nostalgic_hypatia.1       aluracursos/barbearia:latest   vm4                         Running             Running 19 minutes ago
+nzlrqksc46gk         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   vm1                         Shutdown            Shutdown 19 minutes ago
+9135v8a67z3p         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg7tbxqe5lkts03qayhgfby3   Shutdown            Shutdown 2 hours ago
+thhjx9z0786h         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg7tbxqe5lkts03qayhgfby3   Shutdown            Failed 2 days ago         "task: non-zero exit (137)"
+docker@vm1:~$
 
 
 
