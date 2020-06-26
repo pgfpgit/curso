@@ -791,6 +791,56 @@ thhjx9z0786h         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg
 docker@vm1:~$
 
 
+18 - Serviços globais e replicados
+
+docker service update --replicas 5 lcsaai6vp88x
+ou
+docker service scale lcsaai6vp88x=5
+
+docker@vm1:~$ docker service ps lcs
+ID                  NAME                      IMAGE                          NODE                        DESIRED STATE       CURRENT STATE             ERROR                         PORTS
+1sdbwor05x1b        nostalgic_hypatia.1       aluracursos/barbearia:latest   vm4                         Running             Running 50 minutes ago
+nzlrqksc46gk         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   vm1                         Shutdown            Shutdown 51 minutes ago
+9135v8a67z3p         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg7tbxqe5lkts03qayhgfby3   Shutdown            Shutdown 2 hours ago
+thhjx9z0786h         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg7tbxqe5lkts03qayhgfby3   Shutdown            Failed 2 days ago         "task: non-zero exit (137)"
+d15de51wnn18        nostalgic_hypatia.2       aluracursos/barbearia:latest   vm1                         Running             Running 58 seconds ago
+ps3oji3n0t6f        nostalgic_hypatia.3       aluracursos/barbearia:latest   vm3                         Running             Running 29 seconds ago
+po722kbqxzhr        nostalgic_hypatia.4       aluracursos/barbearia:latest   vm2                         Running             Running 58 seconds ago
+ljkgp7lzskgr        nostalgic_hypatia.5       aluracursos/barbearia:latest   vm5                         Running             Running 30 seconds ago
+docker@vm1:~$ docker service update --replicas 8 lcs
+lcs
+overall progress: 8 out of 8 tasks
+1/8: running   [==================================================>]
+2/8: running   [==================================================>]
+3/8: running   [==================================================>]
+4/8: running   [==================================================>]
+5/8: running   [==================================================>]
+6/8: running   [==================================================>]
+7/8: running   [==================================================>]
+8/8: running   [==================================================>]
+verify: Service converged
+docker@vm1:~$ docker service ps lcs
+ID                  NAME                      IMAGE                          NODE                        DESIRED STATE       CURRENT STATE                ERROR                         PORTS
+1sdbwor05x1b        nostalgic_hypatia.1       aluracursos/barbearia:latest   vm4                         Running             Running 51 minutes ago
+nzlrqksc46gk         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   vm1                         Shutdown            Shutdown 51 minutes ago
+9135v8a67z3p         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg7tbxqe5lkts03qayhgfby3   Shutdown            Shutdown 2 hours ago
+thhjx9z0786h         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   zjg7tbxqe5lkts03qayhgfby3   Shutdown            Failed 2 days ago            "task: non-zero exit (137)"
+d15de51wnn18        nostalgic_hypatia.2       aluracursos/barbearia:latest   vm1                         Running             Running about a minute ago
+ps3oji3n0t6f        nostalgic_hypatia.3       aluracursos/barbearia:latest   vm3                         Running             Running about a minute ago
+po722kbqxzhr        nostalgic_hypatia.4       aluracursos/barbearia:latest   vm2                         Running             Running about a minute ago
+ljkgp7lzskgr        nostalgic_hypatia.5       aluracursos/barbearia:latest   vm5                         Running             Running about a minute ago
+l12plilcrk8v        nostalgic_hypatia.6       aluracursos/barbearia:latest   vm2                         Running             Running 8 seconds ago
+94fr72c4dkm4        nostalgic_hypatia.7       aluracursos/barbearia:latest   vm3                         Running             Running 8 seconds ago
+mhzbi6nkj8xz        nostalgic_hypatia.8       aluracursos/barbearia:latest   vm1                         Running             Running 8 seconds ago
+docker@vm1:~$
+
+
+19 - Criando serviço GLOBAL
+
+docker service create -p 8080:3000 --mode global aluracursos/barbearia
+
+
+
 
 
 
