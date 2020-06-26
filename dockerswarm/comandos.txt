@@ -245,6 +245,8 @@ docker@vm1:~$
     6.1 - Criar as VMs nós
     docker-machine create -d virtualbox vm2
     docker-machine create -d virtualbox vm3
+    docker-machine create -d virtualbox vm4
+    docker-machine create -d virtualbox vm5
 
     pedro@phantro MINGW64 ~
     $ docker-machine create -d virtualbox vm2
@@ -602,6 +604,119 @@ ID                  NAME                      IMAGE                          NOD
 9135v8a67z3p        nostalgic_hypatia.1       aluracursos/barbearia:latest   vm2                 Running             Running about a minute ago
 thhjx9z0786h         \_ nostalgic_hypatia.1   aluracursos/barbearia:latest   vm2                 Shutdown            Failed about a minute ago    "task: non-zero exit (137)"
 docker@vm1:~$
+
+
+13 - Parando as VMs
+
+pedro@phantro MINGW64 ~
+$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+default   *        virtualbox   Running   tcp://192.168.99.100:2376           v19.03.5
+vm1       -        virtualbox   Running   tcp://192.168.99.101:2376           v19.03.5
+vm2       -        virtualbox   Running   tcp://192.168.99.102:2376           v19.03.5
+vm3       -        virtualbox   Running   tcp://192.168.99.103:2376           v19.03.5
+
+pedro@phantro MINGW64 ~
+$ docker-machine stop default
+Stopping "default"...
+Machine "default" was stopped.
+
+pedro@phantro MINGW64 ~
+$ docker-machine stop vm1
+Stopping "vm1"...
+Machine "vm1" was stopped.
+
+pedro@phantro MINGW64 ~
+$ docker-machine stop vm2
+Stopping "vm2"...
+Machine "vm2" was stopped.
+
+pedro@phantro MINGW64 ~
+$ docker-machine stop vm3
+Stopping "vm3"...
+Machine "vm3" was stopped.
+
+pedro@phantro MINGW64 ~
+$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL   SWARM   DOCKER    ERRORS
+default   -        virtualbox   Stopped                 Unknown
+vm1       -        virtualbox   Stopped                 Unknown
+vm2       -        virtualbox   Stopped                 Unknown
+vm3       -        virtualbox   Stopped                 Unknown
+
+pedro@phantro MINGW64 ~
+$
+
+
+14 - Como fazer backup do Swarm 
+
+VM1 - Manager
+cd /var/lib/docker/swarm
+
+docker@vm1:~$ sudo su
+root@vm1:/home/docker# cd /var/lib/docker/swarm/
+root@vm1:/var/lib/docker/swarm#
+root@vm1:/var/lib/docker/swarm#
+root@vm1:/var/lib/docker/swarm# ls
+certificates       raft               worker
+docker-state.json  state.json
+root@vm1:/var/lib/docker/swarm#
+
+Caso os nós sejam removidos basta restaurar o conteudo do diretório
+
+Copiar os arquivos de backup para /var/lib/docker/swarm/
+cp -r backup/* /var/lib/docker/swarm/
+
+Iniciar o cluster com o parametro "--force-new-cluster" para carregar os arquivos salvos em /var/lib/docker/swarm/
+docker swarm init --force-new-cluster --advertise-addr 192.168.99.112
+
+15 - Criando mais managers
+
+No manager VM identificar o token para adicionar novos managers no SWARM
+docker swarm join-token manager
+
+docker@vm1:~$ docker swarm join-token manager
+To add a manager to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-49rrfgce552b1d4mb9v8h8rn7sgpz0trjqwxctl4pqvs4gqnhu-dczn0ont8ua95h41us671grsh 192.168.99.101:2377
+
+docker@vm1:~$
+
+Para formatar saída do comando com a opção --format:
+docker node ls --format "{{.Hostname}} {{.ManagerStatus}}"
+vm1 Leader
+vm2 Reachable
+vm2
+vm3 Reachable
+vm3
+vm4
+vm5
+
+docker node ls --format "{{.Hostname}} {{.Status}} {{.ManagerStatus}}"
+vm1 Ready Leader (Manager e Líder)
+vm2 Ready Reachable (Manager)
+vm2 Down
+vm3 Ready Reachable (Manager)
+vm3 Down
+vm4 Ready
+vm5 Ready
+
+15 - Algoritmo de Consenso Raft
+
+Regras para eleição de novo líder do Swarm
+
+Suporta (N-1)/2 falhas
+
+Deve ter no mínimo  N/2 + 1 de quórum
+
+Onde N = Número de Managers
+
+Recomendação do Docker = 3, 5 ou 7 Managers nunca acima de 10 por questão de desempenho
+
+
+
+
+
 
 
 
