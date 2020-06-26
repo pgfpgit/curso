@@ -839,6 +839,102 @@ docker@vm1:~$
 
 docker service create -p 8080:3000 --mode global aluracursos/barbearia
 
+20 - Driver Overlay
+
+Rede do Swarm
+
+docker@vm1:~$ docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+6f28adc8167b        bridge              bridge              local
+82c9cc141aa8        docker_gwbridge     bridge              local
+53d2d8c1bd3d        host                host                local
+qalvm0qjww2g        ingress             overlay             swarm
+4fc185dc0904        none                null                local
+docker@vm1:~$
+
+docker service create --name servico --replicas 2 alpine sleep 1d
+
+docker@vm1:~$ docker service create --name servico --replicas 2 alpine sleep 1d
+ykqsrkkk715fwyot190cxa69v
+overall progress: 2 out of 2 tasks
+1/2: running
+2/2: running
+verify: Service converged
+docker@vm1:~$       
+
+Testando o conceito Service Discovery
+
+Criando novo serviço com duas réplicas:
+docker@vm1:~$ docker service create --name servico --network my_overlay --replicas 2 alpine sleep 1d
+bp3559xv26otujpuufjc8ox1n
+overall progress: 2 out of 2 tasks
+1/2: running   [==================================================>]
+2/2: running   [==================================================>]
+verify: Service converged
+
+Verificando em quais nós estão executando o novo servico
+docker@vm1:~$ docker service ps bp3559xv26otujpuufjc8ox1n
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS
+ruf1cwpi2n3o        servico.1           alpine:latest       vm4                 Running             Running about a minute ago
+qflquojly41c        servico.2           alpine:latest       vm5                 Running             Running about a minute ago
+docker@vm1:~$
+
+Verificando se a nova rede overlay my_overlay foi reconhecida no nó VM5
+docker@vm5:~$ docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+19ff57bb99b3        bridge              bridge              local
+3365d975e7da        docker_gwbridge     bridge              local
+1cf3b80c50e9        host                host                local
+qalvm0qjww2g        ingress             overlay             swarm
+82h9l9084ffq        my_overlay          overlay             swarm
+be5fbee0238f        none                null                local
+docker@vm5:~$
+
+docker@vm4:~$ docker container ls
+CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS               NAMES
+4c981021e262        alpine:latest                  "sleep 1d"               5 minutes ago       Up 5 minutes                            servico.1.ruf1cwpi2n3oujl51mnazz3hz
+cc6ff3d2aed0        aluracursos/barbearia:latest   "/bin/sh -c 'node se…"   3 hours ago         Up 3 hours                              nostalgic_hypatia.1.1sdbwor05x1buw45hozm1c1bk
+docker@vm4:~$
+
+docker@vm5:~$ docker container ls
+CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS               NAMES
+00588ccb341e        alpine:latest                  "sleep 1d"               5 minutes ago       Up 5 minutes                            servico.2.qflquojly41c13xseby8quof3
+25584ec84853        aluracursos/barbearia:latest   "/bin/sh -c 'node se…"   2 hours ago         Up 2 hours                              nostalgic_hypatia.5.ljkgp7lzskgrkvou8gm5wyius
+docker@vm5:~$
+docker@vm5:~$
+docker@vm5:~$ docker exec -it servico.2.qflquojly41c13xseby8quof3 sh
+/ #
+/ #
+/ # ping servico.1.ruf1cwpi2n3oujl51mnazz3hz
+PING servico.1.ruf1cwpi2n3oujl51mnazz3hz (10.0.1.3): 56 data bytes
+64 bytes from 10.0.1.3: seq=0 ttl=64 time=1.989 ms
+64 bytes from 10.0.1.3: seq=1 ttl=64 time=0.511 ms
+64 bytes from 10.0.1.3: seq=2 ttl=64 time=0.478 ms
+64 bytes from 10.0.1.3: seq=3 ttl=64 time=0.833 ms
+64 bytes from 10.0.1.3: seq=4 ttl=64 time=0.532 ms
+64 bytes from 10.0.1.3: seq=5 ttl=64 time=0.457 ms
+^C
+--- servico.1.ruf1cwpi2n3oujl51mnazz3hz ping statistics ---
+6 packets transmitted, 6 packets received, 0% packet loss
+round-trip min/avg/max = 0.457/0.800/1.989 ms
+/ #
+
+
+Por mais que o driver overlay seja responsável por comunicar múltiplos hosts em uma mesma rede,
+também podemos conectar containers em escopo local criados com o comando docker container 
+run em redes criadas com esse driver.
+
+Para isso, basta no momento da criação da rede utilizarmos a flag --attachable:
+
+docker network create -d overlay --attachable my_overlay
+
+Com o comando acima, conseguiremos conectar tanto serviços como containers "standalone" em nossa rede my_overlay.
+
+
+
+
+
+
 
 
 
