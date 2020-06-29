@@ -931,12 +931,67 @@ docker network create -d overlay --attachable my_overlay
 Com o comando acima, conseguiremos conectar tanto serviços como containers "standalone" em nossa rede my_overlay.
 
 
+21 - Deploy com Docker Stack
+
+docker stack deply --conmpose-file docker-compose.yml vote
+
+docker@vm1:~$ docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE                                          PORTS
+drkt9f5f2epp        vote_db             replicated          0/1                 postgres:9.4
+nxjn9zj50zt5        vote_redis          replicated          1/1                 redis:alpine
+6hw5ld7mmbd5        vote_result         replicated          1/1                 dockersamples/examplevotingapp_result:before   *:5001->80/tcp
+as6ybhn3cn6d        vote_visualizer     replicated          1/1                 dockersamples/visualizer:stable                *:8080->8080/tcp
+pk91ppt1pq0s        vote_vote           replicated          2/2                 dockersamples/examplevotingapp_vote:before     *:5000->80/tcp
+p092twc1ml1e        vote_worker         replicated          1/1                 dockersamples/examplevotingapp_worker:latest
+
+docker@vm1:~$ docker stack ls
+NAME                SERVICES            ORCHESTRATOR
+vote                6                   Swarm
+docker@vm1:~$
+
+docker service ls --format "{{.Name}} {{.Replicas}}"
+docker@vm1:~$ docker service ls --format "{{.Name}} {{.Replicas}}"
+vote_db 0/1
+vote_redis 1/1
+vote_result 1/1
+vote_visualizer 1/1
+vote_vote 2/2
+vote_worker 0/1
+docker@vm1:~$
+
+Verificar o status de um serviço do stack
+docker service ps vote_db
+
+docker@vm1:~$ docker service ps vote_db
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE                      ERROR                       PORTS
+841h8z33n4sr        vote_db.1           postgres:9.4        vm1                 Ready               Preparing less than a second ago
+qacdfpubkphb         \_ vote_db.1       postgres:9.4        vm3                 Shutdown            Failed less than a second ago      "task: non-zero exit (1)"
+ql1jmilj9ih7         \_ vote_db.1       postgres:9.4        vm3                 Shutdown            Failed 6 seconds ago               "task: non-zero exit (1)"
+n2xiw8vdz48k         \_ vote_db.1       postgres:9.4        vm3                 Shutdown            Failed 12 seconds ago              "task: non-zero exit (1)"
+runeskhxjknf         \_ vote_db.1       postgres:9.4        vm2                 Shutdown            Failed 18 seconds ago              "task: non-zero exit (1)"
+docker@vm1:~$ docker service ps vote_worker
+ID                  NAME                IMAGE                                          NODE                DESIRED STATE       CURRENT STATE                    ERROR                       PORTS
+5v7hlyyhtir4        vote_worker.1       dockersamples/examplevotingapp_worker:latest   vm4                 Running             Running less than a second ago
+xrul4es8z5et         \_ vote_worker.1   dockersamples/examplevotingapp_worker:latest   vm5                 Shutdown            Failed 6 seconds ago             "task: non-zero exit (1)"
+nh7jt98k32jo         \_ vote_worker.1   dockersamples/examplevotingapp_worker:latest   vm5                 Shutdown            Failed 13 seconds ago            "task: non-zero exit (1)"
+uqmco3tnr784         \_ vote_worker.1   dockersamples/examplevotingapp_worker:latest   vm5                 Shutdown            Failed 20 seconds ago            "task: non-zero exit (1)"
+jxczwzaw3ted         \_ vote_worker.1   dockersamples/examplevotingapp_worker:latest   vm5                 Shutdown            Failed 26 seconds ago            "task: non-zero exit (1)"
+docker@vm1:~
 
 
+Para remover uma stack
+docker stack rm vote
 
+docker@vm1:~$ docker stack rm vote
+Removing service vote_db
+Removing service vote_redis 1/1
+Removing service vote_result 1/1
+Removing service vote_visualizer 1/1
+Removing service vote_vote 2/2
+Removing service vote_worker 0/1
 
-
-
+docker@vm1:~$ docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE   PORTS
 
 
 
