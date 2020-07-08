@@ -220,3 +220,222 @@ Use "minikube <command> --help" for more information about a given command.
 
 pedro@phantro MINGW64 /d/curso/kubernetes (master)
 
+$ minikube status
+* There is no local cluster named "minikube"
+  - To fix this, run: "minikube start"
+
+8 - Exacutando o minikube
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$ minikube start
+* minikube v1.11.0 on Microsoft Windows 7 Ultimate Service Pack 1 6.1.7601 Build 7601
+* Automatically selected the virtualbox driver
+* Downloading VM boot image ...
+    > minikube-v1.11.0.iso.sha256: 65 B / 65 B [-------------] 100.00% ? p/s 0s
+    > minikube-v1.11.0.iso: 174.99 MiB / 174.99 MiB  100.00% 1.08 MiB p/s 2m42s
+* Starting control plane node minikube in cluster minikube
+* Downloading Kubernetes v1.18.3 preload ...
+    > preloaded-images-k8s-v3-v1.18.3-docker-overlay2-amd64.tar.lz4: 526.01 MiB
+* Creating virtualbox VM (CPUs=2, Memory=2200MB, Disk=20000MB) ...
+* Found network options:
+  - NO_PROXY=192.168.99.100
+  - no_proxy=192.168.99.100
+* Preparing Kubernetes v1.18.3 on Docker 19.03.8 ...
+  - env NO_PROXY=192.168.99.100
+* Verifying Kubernetes components...
+* Enabled addons: default-storageclass, storage-provisioner
+* Done! kubectl is now configured to use "minikube"
+
+! C:\Users\pedro\Desktop\HomeOffice\Kubernetes\kubectl.exe is version 1.16.8, which may be incompatible with Kubernetes 1.18.3.
+* You can also use 'minikube kubectl -- get pods' to invoke a matching version
+
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$
+
+9 - Verificando o painel 
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$ minikube dashboard
+* Enabling dashboard ...
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:58548/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+
+
+10 - Comandos úteis
+
+O Minikube implementa um cluster local do Kubernetes para Linux, Mac e Windows. 
+O objetivo principal é ser uma ótima ferramenta para o desenvolvimento local de aplicativos Kubernetes para experimentar, 
+aprender, rodar testes e usar na integração contínua.
+
+Abaixo, temos os principais comandos do Minikube.
+
+Para iniciar o Minikube:
+
+minikube start
+
+Para iniciar o Minikube com uma versão especifica do Kubernetes:
+
+minikube start --kubernetes-version="v1.16"
+
+Para acessar o dashboard do Kubernetes em execução:
+
+minikube dashboard
+
+Para ver o status do Minikube:
+
+minikube status
+
+Para parar o cluster:
+
+minikube stop
+
+Para se conectar pelo SSH com o nó master do cluster:
+
+minikube ssh
+
+E para remover o cluster:
+
+minikube delete
+
+E para remover todos os clusters e perfis:
+
+minikube delete --all
+
+
+11 - Criando o primeiro pod
+
+11.1 - Para mover o yml para dentro do cluster:
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f aplicacao.yml
+pod/aplicacao-noticia created
+
+11.2 - Verificando se o pod foio criado
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                READY   STATUS    RESTARTS   AGE
+aplicacao-noticia   1/1     Running   0          96s
+
+11.3 - Verificando informações dos pods:
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl describe pods
+Name:         aplicacao-noticia
+Namespace:    default
+Priority:     0
+Node:         minikube/192.168.99.106
+Start Time:   Wed, 08 Jul 2020 16:26:14 -0300
+Labels:       <none>
+Annotations:  <none>
+Status:       Running
+IP:           172.17.0.6
+IPs:
+  IP:  172.17.0.6
+Containers:
+  container-aplicacao:
+    Container ID:   docker://ef691a1eb89b1ab55061e0c0e63e4ab37bcf410830fcba52f730e90156df812d
+    Image:          jnlucas/image-phpmysql:latest
+    Image ID:       docker-pullable://jnlucas/image-phpmysql@sha256:b730587aabc4d518555bcf2c533709d8cccb1d637bbc0a1daee6f07f6d3c17cb
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 08 Jul 2020 16:27:13 -0300
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-nd24n (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-nd24n:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-nd24n
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  2m36s  default-scheduler  Successfully assigned default/aplicacao-noticia to minikube
+  Normal  Pulling    2m36s  kubelet, minikube  Pulling image "jnlucas/image-phpmysql:latest"
+  Normal  Pulled     99s    kubelet, minikube  Successfully pulled image "jnlucas/image-phpmysql:latest"
+  Normal  Created    97s    kubelet, minikube  Created container container-aplicacao
+  Normal  Started    97s    kubelet, minikube  Started container container-aplicacao
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+
+11.4 - Informações específicas do pod aplicacao-noticia
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl describe pods aplicacao-noticia
+Name:         aplicacao-noticia
+Namespace:    default
+Priority:     0
+Node:         minikube/192.168.99.106
+Start Time:   Wed, 08 Jul 2020 16:26:14 -0300
+Labels:       <none>
+Annotations:  <none>
+Status:       Running
+IP:           172.17.0.6
+IPs:
+  IP:  172.17.0.6
+Containers:
+  container-aplicacao:
+    Container ID:   docker://ef691a1eb89b1ab55061e0c0e63e4ab37bcf410830fcba52f730e90156df812d
+    Image:          jnlucas/image-phpmysql:latest
+    Image ID:       docker-pullable://jnlucas/image-phpmysql@sha256:b730587aabc4d518555bcf2c533709d8cccb1d637bbc0a1daee6f07f6d3c17cb
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 08 Jul 2020 16:27:13 -0300
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-nd24n (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-nd24n:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-nd24n
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  4m43s  default-scheduler  Successfully assigned default/aplicacao-noticia to minikube
+  Normal  Pulling    4m43s  kubelet, minikube  Pulling image "jnlucas/image-phpmysql:latest"
+  Normal  Pulled     3m46s  kubelet, minikube  Successfully pulled image "jnlucas/image-phpmysql:latest"
+  Normal  Created    3m44s  kubelet, minikube  Created container container-aplicacao
+  Normal  Started    3m44s  kubelet, minikube  Started container container-aplicacao
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+
+12 - Conceitos introduzidos:
+    Kubernetes é um cluster que administra e orquestra container
+    
+	Minikube é um ambiente de teste do Kubernetes
+    
+	Para rodar Minikube serve o comando: minikube start
+    
+	kubectl é a ferramenta na linha de comando para gerenciar o cluster Kubernetes
+    
+	Para definir um container no Kubernetes é preciso definir um Pod
+        Um Pod é a menor unidade de deploy no Kubernetes
+        Um Pod agrupa um ou mais containers que compartilham a mesma interface de rede e sistema de arquivos
+        Um Pod é um objeto no Kubernetes descrito por um arquivo YML
+        O YML do Pod define qual é a imagem, porta, versão, nome entre outras configurações
