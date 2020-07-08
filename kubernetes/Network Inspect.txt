@@ -1,0 +1,14 @@
+Network Inspect
+
+Banco:
+ "Gateway": "172.20.0.1",
+ "IPAddress": "172.20.0.4",
+
+Kube
+ "Gateway": "172.20.0.1",
+ "IPAddress": "172.20.0.2",
+ 
+Kube Noticias
+ "Gateway": "172.20.0.1",
+ "IPAddress": "172.20.0.3",
+ 

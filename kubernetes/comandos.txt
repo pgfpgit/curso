@@ -1,0 +1,100 @@
+
+1 - Criando container de MySQL 5.7
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ docker-compose up -d
+Creating network "mysql_default" with the default driver
+Pulling db (mysql:5.7)...
+5.7: Pulling from library/mysql
+Digest: sha256:32f9d9a069f7a735e28fd44ea944d53c61f990ba71460c5c183e610854ca4854
+Status: Downloaded newer image for mysql:5.7
+Creating banco_mysql ... done
+
+Outro exemplo:
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ docker-compose up -d
+Creating banco_mysql ... done
+
+
+2 - Rodando novo container
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ docker-compose up -d
+Starting banco_mysql ... done
+
+Outro exemplo:
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ docker-compose up -d
+Starting banco_mysql ... done
+
+3 - Verificando o que está rodando
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ docker-compose ps
+The system cannot find the path specified.
+   Name                 Command             State                 Ports
+-------------------------------------------------------------------------------------
+banco_mysql   docker-entrypoint.sh mysqld   Up      0.0.0.0:3306->3306/tcp, 33060/tcp
+
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                               NAMES
+ca06e879eca8        mysql:5.7           "docker-entrypoint.s…"   2 minutes ago       Up 12 seconds       0.0.0.0:3306->3306/tcp, 33060/tcp   banco_mysql
+
+
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ docker-compose ps -a
+
+The system cannot find the path specified.
+   Name                 Command             State                 Ports
+-------------------------------------------------------------------------------------
+banco_mysql   docker-entrypoint.sh mysqld   Up      0.0.0.0:3306->3306/tcp, 33060/tcp
+
+
+4 - Acessando o container
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ docker exec -it banco_mysql sh --tty
+the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
+
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ winpty docker exec -it banco_mysql sh
+#
+#
+
+4.1 - Importando usuários
+root@ca06e879eca8:/home# sh import.sh
+mysql: [Warning] Using a password on the command line interface can be insecure.
+mysql: [Warning] Using a password on the command line interface can be insecure.
+root@ca06e879eca8:/home#
+
+
+5 - Subindo os dois serviços restantes
+pedro@phantro MINGW64 /d/curso/kubernetes/mysql (master)
+$ cd ..
+
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$ ls
+comandos.txt  docker-compose.yml  mysql/  noticias/  sistema/
+
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$ docker-compose up -d
+Creating network "kubernetes_default" with the default driver
+Pulling noticias_web (jnlucas/image-phpmysql:latest)...
+latest: Pulling from jnlucas/image-phpmysql
+Digest: sha256:b730587aabc4d518555bcf2c533709d8cccb1d637bbc0a1daee6f07f6d3c17cb
+Status: Downloaded newer image for jnlucas/image-phpmysql:latest
+Creating container-kube          ... done
+Creating container-kube-noticias ... done
+
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$
+
+6 - Verificando se os containers necessários estão rodando
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$ docker ps
+CONTAINER ID        IMAGE                           COMMAND                  CREATED             STATUS              PORTS                               NAMES
+3b56f81d610f        jnlucas/image-phpmysql:latest   "docker-php-entrypoi…"   27 seconds ago      Up About a minute   0.0.0.0:8588->80/tcp                container-kube-noticias
+92acaae73c22        jnlucas/image-phpmysql:latest   "docker-php-entrypoi…"   27 seconds ago      Up About a minute   0.0.0.0:8587->80/tcp                container-kube
+ca06e879eca8        mysql:5.7                       "docker-entrypoint.s…"   28 minutes ago      Up 25 minutes       0.0.0.0:3306->3306/tcp, 33060/tcp   banco_mysql
+
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$
+
+

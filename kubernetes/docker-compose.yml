@@ -1,8 +1,10 @@
-version: '3.7'
+version: '3.3'
 services:
   noticias_web:
     container_name: container-kube-noticias
     image: jnlucas/image-phpmysql:latest
+    networks: 
+      - production-network
     volumes:
       - ./noticias:/var/www/html
 
@@ -13,9 +15,30 @@ services:
   sistema_web:
     container_name: container-kube
     image: jnlucas/image-phpmysql:latest
+    networks: 
+      - production-network
     volumes:
       - ./sistema:/var/www/html
 
     working_dir: /var/www/html/
     ports:
       - "8587:80"
+  db:
+    image: mysql:5.7
+    networks: 
+      - production-network
+    container_name: banco_mysql
+    volumes:
+      - ./mysql:/home
+
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'empresa'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'q1w2e3r4'
+      MYSQL_ROOT_PASSWORD: 'q1w2e3r4'
+
+networks:
+    production-network:
+        driver: bridge
