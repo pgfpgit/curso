@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  noticias_web:
+    container_name: container-kube-noticias
+    image: jnlucas/image-phpmysql:latest
+    volumes:
+      - ./noticias:/var/www/html
+
+    working_dir: /var/www/html/
+    ports:
+      - "8588:80"
+
+  sistema_web:
+    container_name: container-kube
+    image: jnlucas/image-phpmysql:latest
+    volumes:
+      - ./sistema:/var/www/html
+
+    working_dir: /var/www/html/
+    ports:
+      - "8587:80"

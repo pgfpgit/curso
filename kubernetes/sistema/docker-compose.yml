@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  db:
+     image: mysql:5.7
+     container_name: banco_mysql
+     ports:
+       - '3306:3306'
+     environment:
+        MYSQL_DATABASE: 'empresa'
+        MYSQL_USER: 'root'
+        MYSQL_PASSWORD: 'q1w2e3r4'
+        MYSQL_ROOT_PASSWORD: 'q1w2e3r4'
+
+  sistema_web:
+    container_name: container-kube
+    image: jnlucas/image-phpmysql:latest
+    volumes:
+      - ./:/var/www/html
+
+    working_dir: /var/www/html/
+    ports:
+      - "8587:80"
+    depends_on:
+        - db
