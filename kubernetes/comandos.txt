@@ -439,3 +439,241 @@ pedro@phantro MINGW64 ~/kubernetes/kubernetes
         Um Pod agrupa um ou mais containers que compartilham a mesma interface de rede e sistema de arquivos
         Um Pod é um objeto no Kubernetes descrito por um arquivo YML
         O YML do Pod define qual é a imagem, porta, versão, nome entre outras configurações
+
+13 - Comandos
+
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$ kubectl explain node
+KIND:     Node
+VERSION:  v1
+
+DESCRIPTION:
+     Node is a worker node in Kubernetes. Each node will have a unique
+     identifier in the cache (i.e. in etcd).
+
+FIELDS:
+   apiVersion   <string>
+     APIVersion defines the versioned schema of this representation of an
+     object. Servers should convert recognized schemas to the latest internal
+     value, and may reject unrecognized values. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+
+   kind <string>
+     Kind is a string value representing the REST resource this object
+     represents. Servers may infer this from the endpoint the client submits
+     requests to. Cannot be updated. In CamelCase. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+
+   metadata     <Object>
+     Standard object's metadata. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+
+   spec <Object>
+     Spec defines the behavior of a node.
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+
+   status       <Object>
+     Most recently observed status of the node. Populated by the system.
+     Read-only. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+
+
+pedro@phantro MINGW64 /d/curso/kubernetes (master)
+$ kubectl explain pod
+KIND:     Pod
+VERSION:  v1
+
+DESCRIPTION:
+     Pod is a collection of containers that can run on a host. This resource is
+     created by clients and scheduled onto hosts.
+
+FIELDS:
+   apiVersion   <string>
+     APIVersion defines the versioned schema of this representation of an
+     object. Servers should convert recognized schemas to the latest internal
+     value, and may reject unrecognized values. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+
+   kind <string>
+     Kind is a string value representing the REST resource this object
+     represents. Servers may infer this from the endpoint the client submits
+     requests to. Cannot be updated. In CamelCase. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+
+   metadata     <Object>
+     Standard object's metadata. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+
+   spec <Object>
+     Specification of the desired behavior of the pod. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+
+   status       <Object>
+     Most recently observed status of the pod. This data may not be up to date.
+     Populated by the system. Read-only. More info:
+     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+
+14 - Criando Pods com Deployment 
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f deployment-aplicacao.yml
+deployment.apps/aplicacao-noticia-deployment created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$
+
+15 - Verificando se o POD está rodando
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia                               1/1     Running   0          33m
+aplicacao-noticia-deployment-7b48c4c7d8-swl4p   1/1     Running   0          68s
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$
+
+15 - Verificando como um Pod com Deployment se comporta ao ser removido
+
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia                               1/1     Running   0          36m
+aplicacao-noticia-deployment-7b48c4c7d8-swl4p   1/1     Running   0          4m26s
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl delete pods aplicacao-noticia-deployment-7b48c4c7d8-swl4p
+pod "aplicacao-noticia-deployment-7b48c4c7d8-swl4p" deleted
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia                               1/1     Running   0          37m
+aplicacao-noticia-deployment-7b48c4c7d8-w4ngx   1/1     Running   0          5s
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl delete pods aplicacao-noticia
+pod "aplicacao-noticia" deleted
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia-deployment-7b48c4c7d8-w4ngx   1/1     Running   0          31s
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$
+
+16 - Arquitetura
+
+User 
+
+o	   ||=============||
+|´ =>> || LoadBalance || ====> Deployment =====> pod
+^	   || ============||
+	 
+17 - Criando o LoadBalancer
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f servico-aplicacao-noticia.yml
+service/servico-aplicacao-noticia created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube service servico-aplicacao-noticia --url
+http://192.168.99.106:31417
+
+
+18 - Acessando um Pod
+
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia-deployment-7b48c4c7d8-w4ngx   1/1     Running   0          14m
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ winpty kubectl exec -it aplicacao-noticia-deployment-7b48c4c7d8-w4ngx bash
+root@aplicacao-noticia-deployment-7b48c4c7d8-w4ngx:/var/www/html#
+root@aplicacao-noticia-deployment-7b48c4c7d8-w4ngx:/var/www/html#
+root@aplicacao-noticia-deployment-7b48c4c7d8-w4ngx:/var/www/html#
+root@aplicacao-noticia-deployment-7b48c4c7d8-w4ngx:/var/www/html#
+root@aplicacao-noticia-deployment-7b48c4c7d8-w4ngx:/var/www/html#
+root@aplicacao-noticia-deployment-7b48c4c7d8-w4ngx:/var/www/html#
+
+
+
+19 - Criando Imagem com o conteúdo da aplicação
+
+pedro@phantro MINGW64 ~/kubernetes
+$ docker push pgfpdocker/noticia-alura:v1
+The push refers to repository [docker.io/pgfpdocker/noticia-alura]
+a245b3259026: Preparing
+3cea1c3d7bce: Preparing
+5e2d46af7123: Preparing
+d1177381575d: Preparing
+c9f301e0817a: Preparing
+2960b2cbb694: Preparing
+a57495858b40: Preparing
+f312a77fc287: Preparing
+7bd2d1f0758a: Preparing
+cfc46f8f22a0: Preparing
+1d774c7ae742: Preparing
+1aab22401f12: Preparing
+13ab94c9aa15: Preparing
+588ee8a7eeec: Preparing
+bebcda512a6d: Preparing
+5ce59bfe8a3a: Preparing
+d89c229e40ae: Preparing
+9311481e1bdc: Preparing
+4dd88f8a7689: Preparing
+b1841504f6c8: Preparing
+6eb3cfd4ad9e: Preparing
+82bded2c3a7c: Preparing
+b87a266e6a9c: Preparing
+3c816b4ead84: Preparing
+2960b2cbb694: Waiting
+a57495858b40: Waiting
+f312a77fc287: Waiting
+7bd2d1f0758a: Waiting
+cfc46f8f22a0: Waiting
+1d774c7ae742: Waiting
+1aab22401f12: Waiting
+13ab94c9aa15: Waiting
+588ee8a7eeec: Waiting
+bebcda512a6d: Waiting
+5ce59bfe8a3a: Waiting
+d89c229e40ae: Waiting
+9311481e1bdc: Waiting
+4dd88f8a7689: Waiting
+b1841504f6c8: Waiting
+6eb3cfd4ad9e: Waiting
+82bded2c3a7c: Waiting
+b87a266e6a9c: Waiting
+3c816b4ead84: Waiting
+5e2d46af7123: Mounted from jnlucas/image-phpmysql
+d1177381575d: Mounted from jnlucas/image-phpmysql
+3cea1c3d7bce: Mounted from jnlucas/image-phpmysql
+c9f301e0817a: Mounted from jnlucas/image-phpmysql
+a57495858b40: Mounted from jnlucas/image-phpmysql
+f312a77fc287: Mounted from jnlucas/image-phpmysql
+2960b2cbb694: Mounted from jnlucas/image-phpmysql
+7bd2d1f0758a: Mounted from jnlucas/image-phpmysql
+1aab22401f12: Mounted from jnlucas/image-phpmysql
+1d774c7ae742: Mounted from jnlucas/image-phpmysql
+13ab94c9aa15: Mounted from jnlucas/image-phpmysql
+bebcda512a6d: Mounted from jnlucas/image-phpmysql
+588ee8a7eeec: Mounted from jnlucas/image-phpmysql
+5ce59bfe8a3a: Mounted from jnlucas/image-phpmysql
+cfc46f8f22a0: Pushed
+d89c229e40ae: Mounted from jnlucas/image-phpmysql
+4dd88f8a7689: Mounted from jnlucas/image-phpmysql
+9311481e1bdc: Mounted from jnlucas/image-phpmysql
+b1841504f6c8: Mounted from jnlucas/image-phpmysql
+6eb3cfd4ad9e: Mounted from jnlucas/image-phpmysql
+82bded2c3a7c: Mounted from jnlucas/image-phpmysql
+b87a266e6a9c: Mounted from jnlucas/image-phpmysql
+3c816b4ead84: Mounted from jnlucas/image-phpmysql
+a245b3259026: Pushed
+v1: digest: sha256:052c83b7f53a4eb31ad423b395dc95ef4800eb295202d229506c727f97c013b9 size: 5344
+
+pedro@phantro MINGW64 ~/kubernetes
+
+
+

@@ -5,6 +5,6 @@ metadata:
 spec:
   containers:
     - name: container-aplicacao
-      image: jnlucas/image-phpmysql:latest
+      image: jnlucas/noticia-alura:v1
       ports: 
         - containerPort: 80
