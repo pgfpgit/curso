@@ -5,14 +5,14 @@ metadata:
 spec:
   selector:
     matchLabels:
-       name: aplicacao-noticia-pod
+      name: aplicacao-noticia-pod
   template:
     metadata:
       labels:
         name: aplicacao-noticia-pod
-    spec:        
+    spec:
       containers:
         - name: container-aplicacao
-          image: jnlucas/image-phpmysql:latest
-          ports: 
+          image: jnlucas/noticia-alura:v3
+          ports:
             - containerPort: 80

@@ -602,6 +602,28 @@ root@aplicacao-noticia-deployment-7b48c4c7d8-w4ngx:/var/www/html#
 19 - Criando Imagem com o conteúdo da aplicação
 
 pedro@phantro MINGW64 ~/kubernetes
+$ winpty docker login -u pgfpdocker
+Password:
+WARNING! Your password will be stored unencrypted in C:\Users\pedro\.docker\config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+pedro@phantro MINGW64 ~/kubernetes
+$ docker build -t noticias-alura .
+Sending build context to Docker daemon  106.2MB
+Step 1/2 : FROM jnlucas/image-phpmysql:latest
+ ---> 83dbf3907361
+Step 2/2 : COPY noticias /var/www/html
+ ---> Using cache
+ ---> 244e2b2c6553
+Successfully built 244e2b2c6553
+Successfully tagged noticias-alura:latest
+SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It  recommended to double check and reset permissions for sensitive files and directories.
+
+pedro@phantro MINGW64 ~/kubernetes
+$ docker tag noticias-alura pgfpdocker/noticia-alura:v1
+
+pedro@phantro MINGW64 ~/kubernetes
 $ docker push pgfpdocker/noticia-alura:v1
 The push refers to repository [docker.io/pgfpdocker/noticia-alura]
 a245b3259026: Preparing
@@ -674,6 +696,12 @@ a245b3259026: Pushed
 v1: digest: sha256:052c83b7f53a4eb31ad423b395dc95ef4800eb295202d229506c727f97c013b9 size: 5344
 
 pedro@phantro MINGW64 ~/kubernetes
+
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube stop
+* Stopping "minikube" in virtualbox ...
+* Node "minikube" stopped.
 
 
 
