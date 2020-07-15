@@ -704,4 +704,182 @@ $ minikube stop
 * Node "minikube" stopped.
 
 
+20 - Aula 3.2 
+
+## Iniciando Minikube
+pedro@phantro MINGW64 ~/kubernetes
+$ minikube start
+* minikube v1.11.0 on Microsoft Windows 7 Ultimate Service Pack 1 6.1.7601 Build 7601
+* Using the virtualbox driver based on existing profile
+
+! 'virtualbox' driver reported an issue: C:\Program Files\Oracle\VirtualBox\VBoxManage.exe list hostinfo failed:
+
+* Suggestion: Install the latest version of VirtualBox
+* Documentation: https://minikube.sigs.k8s.io/docs/reference/drivers/virtualbox/
+
+X Failed to validate 'virtualbox' driver
+
+pedro@phantro MINGW64 ~/kubernetes
+$ minikube restart
+Error: unknown command "restart" for "minikube"
+
+Did you mean this?
+        start
+
+Run 'minikube --help' for usage.
+
+pedro@phantro MINGW64 ~/kubernetes
+$ minikube start
+* minikube v1.11.0 on Microsoft Windows 7 Ultimate Service Pack 1 6.1.7601 Build 7601
+* Using the virtualbox driver based on existing profile
+* Starting control plane node minikube in cluster minikube
+* Restarting existing virtualbox VM for "minikube" ...
+* Found network options:
+  - NO_PROXY=192.168.99.100
+  - no_proxy=192.168.99.100
+* Preparing Kubernetes v1.18.3 on Docker 19.03.8 ...
+  - env NO_PROXY=192.168.99.100
+* Verifying Kubernetes components...
+* Enabled addons: dashboard, default-storageclass, storage-provisioner
+* Done! kubectl is now configured to use "minikube"
+
+! C:\Users\pedro\Desktop\HomeOffice\Kubernetes\kubectl.exe is version 1.16.8, which may be incompatible with Kubernetes 1.18.3.
+* You can also use 'minikube kubectl -- get pods' to invoke a matching version
+
+pedro@phantro MINGW64 ~/kubernetes
+$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+pedro@phantro MINGW64 ~/kubernetes
+$ minikube --help
+minikube provisions and manages local Kubernetes clusters optimized for development workflows.
+
+Basic Commands:
+  start          Starts a local Kubernetes cluster
+  status         Gets the status of a local Kubernetes cluster
+  stop           Stops a running local Kubernetes cluster
+  delete         Deletes a local Kubernetes cluster
+  dashboard      Access the Kubernetes dashboard running within the minikube cluster
+  pause          pause Kubernetes
+  unpause        unpause Kubernetes
+
+Images Commands:
+  docker-env     Configure environment to use minikube's Docker daemon
+  podman-env     Configure environment to use minikube's Podman service
+  cache          Add, delete, or push a local image into minikube
+
+Configuration and Management Commands:
+  addons         Enable or disable a minikube addon
+  config         Modify persistent configuration values
+  profile        Get or list the the current profiles (clusters)
+  update-context Update kubeconfig in case of an IP or port change
+
+Networking and Connectivity Commands:
+  service        Returns a URL to connect to a service
+  tunnel         Connect to LoadBalancer services
+
+Advanced Commands:
+  mount          Mounts the specified directory into minikube
+  ssh            Log into the minikube environment (for debugging)
+  kubectl        Run a kubectl binary matching the cluster version
+  node           Add, remove, or list additional nodes
+
+Troubleshooting Commands:
+  ssh-key        Retrieve the ssh identity key path of the specified cluster
+  ip             Retrieves the IP address of the running cluster
+  logs           Returns logs to debug a local Kubernetes cluster
+  update-check   Print current and latest version number
+  version        Print the version of minikube
+
+Other Commands:
+  completion     Generate command completion for a shell
+
+Use "minikube <command> --help" for more information about a given command.
+
+pedro@phantro MINGW64 ~/kubernetes
+$ minikube ip
+192.168.99.106
+
+pedro@phantro MINGW64 ~/kubernetes
+$ ping 192.168.99.106
+
+Pinging 192.168.99.106 with 32 bytes of data:
+Reply from 192.168.99.106: bytes=32 time<1ms TTL=64
+Reply from 192.168.99.106: bytes=32 time<1ms TTL=64
+Reply from 192.168.99.106: bytes=32 time<1ms TTL=64
+
+Ping statistics for 192.168.99.106:
+    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+Control-C
+
+pedro@phantro MINGW64 ~/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia-deployment-5bf97c9745-2xqf2   1/1     Running   1          20h
+
+pedro@phantro MINGW64 ~/kubernetes
+$
+
+pedro@phantro MINGW64 ~/kubernetes
+$ ls
+ comandos.txt   docker-compose.yml   Dockerfile   kubernetes/   mysql/  'Network Inspect.txt'   noticias/   sistema/  'vm default network info.txt'
+
+pedro@phantro MINGW64 ~/kubernetes
+$ cd kubernetes/
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ ls
+aplicacao.yml  deployment-aplicacao.yml  deployment-sistema.yml  servico-aplicacao-noticia.yml  servico-aplicacao-sistema.yml
+
+
+## Enviando os serviços para o cluster minikube 
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f deployment-sistema.yml
+deployment.apps/aplicacao-sistema-deployment created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f servico-aplicacao-sistema.yml
+service/servico-aplicacao-sistema created
+
+
+## Verificando IPs do serviços
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube service servico-aplicacao-sistema
+|-----------|---------------------------|-------------|-----------------------------|
+| NAMESPACE |           NAME            | TARGET PORT |             URL             |
+|-----------|---------------------------|-------------|-----------------------------|
+| default   | servico-aplicacao-sistema | http/80     | http://192.168.99.106:32650 |
+|-----------|---------------------------|-------------|-----------------------------|
+* Opening service default/servico-aplicacao-sistema in default browser...
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube service servico-aplicacao-noticia
+|-----------|---------------------------|-------------|-----------------------------|
+| NAMESPACE |           NAME            | TARGET PORT |             URL             |
+|-----------|---------------------------|-------------|-----------------------------|
+| default   | servico-aplicacao-noticia | http/80     | http://192.168.99.106:31382 |
+|-----------|---------------------------|-------------|-----------------------------|
+* Opening service default/servico-aplicacao-noticia in default browser...
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia-deployment-5bf97c9745-2xqf2   1/1     Running   1          20h
+aplicacao-sistema-deployment-65777bc54-hvhkl    1/1     Running   0          2m52s
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$
+
+
 
