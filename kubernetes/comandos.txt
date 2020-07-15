@@ -881,5 +881,129 @@ aplicacao-sistema-deployment-65777bc54-hvhkl    1/1     Running   0          2m5
 pedro@phantro MINGW64 ~/kubernetes/kubernetes
 $
 
+21 - Aula 3.6 
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ ls
+aplicacao.yml  deployment-aplicacao.yml  deployment-sistema.yml  servico-aplicacao-noticia.yml  servico-aplicacao-sistema.yml
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl delete -f deployment-aplicacao.yml
+deployment.apps "aplicacao-noticia-deployment" deleted
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f deployment-aplicacao.yml
+deployment.apps/aplicacao-noticia-deployment created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f servico-aplicacao-noticia.yml
+service/servico-aplicacao-noticia created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia-deployment-5bf97c9745-zlb4t   1/1     Running   0          35s
+aplicacao-sistema-deployment-65777bc54-hvhkl    1/1     Running   0          31m
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube service servico-aplicacao-noticia --url
+http://192.168.99.106:31052
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube dashboard
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:58614/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ ls
+aplicacao.yml  deployment-aplicacao.yml  deployment-sistema.yml  permissao-imagens.yml  permissao-sessao.yml  servico-aplicacao-noticia.yml  servico-aplicacao-sistema.yml  statefulset-sistema.yml
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f permissao-sessao.yml
+persistentvolumeclaim/permissao-sessao created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f permissao-imagens.yml
+persistentvolumeclaim/permissao-imagens created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f statefulset-sistema.yml
+statefulset.apps/aplicacao-sistema-statefulset created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl getpods
+Error: unknown command "getpods" for "kubectl"
+Run 'kubectl --help' for usage.
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia-deployment-5bf97c9745-zlb4t   1/1     Running   0          25m
+aplicacao-sistema-deployment-65777bc54-hvhkl    1/1     Running   0          57m
+aplicacao-sistema-statefulset-0                 1/1     Running   0          34s
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube dashboard
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:59157/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f servico-statefulset.yml
+service/servico-aplicacao-sistema-statefulset created
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube service service/servico-aplicacao-sistema-statefulset --url
+X Service 'service/servico-aplicacao-sistema-statefulset' was not found in 'default' namespace.
+You may select another namespace by using 'minikube service service/servico-aplicacao-sistema-statefulset -n <namespace>'. Or list out all the services using 'minikube service list'
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get pods
+NAME                                            READY   STATUS    RESTARTS   AGE
+aplicacao-noticia-deployment-5bf97c9745-zlb4t   1/1     Running   0          29m
+aplicacao-sistema-deployment-65777bc54-hvhkl    1/1     Running   0          61m
+aplicacao-sistema-statefulset-0                 1/1     Running   0          4m37s
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube service aplicacao-sistema-statefulset-0 --url
+X Service 'aplicacao-sistema-statefulset-0' was not found in 'default' namespace.
+You may select another namespace by using 'minikube service aplicacao-sistema-statefulset-0 -n <namespace>'. Or list out all the services using 'minikube service list'
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl get service
+NAME                                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes                              ClusterIP      10.96.0.1        <none>        443/TCP        6d23h
+servico-aplicacao-noticia               LoadBalancer   10.101.101.195   <pending>     80:31052/TCP   34m
+servico-aplicacao-sistema               LoadBalancer   10.109.202.145   <pending>     80:32650/TCP   65m
+servico-aplicacao-sistema-statefulset   LoadBalancer   10.107.49.75     <pending>     80:31757/TCP   5m43s
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl delete -f servico-statefulset.yml
+service "servico-aplicacao-sistema-statefulset" deleted
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f servico-statefulset.yml
+error: error validating "servico-statefulset.yml": error validating data: ValidationError(Service.spec.ports[0]): unknown field "notePort" in io.k8s.api.core.v1.ServicePort; if you choose to ignore these errors, turn validation off with --validate=false
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ kubectl create -f servico-statefulset.yml
+service/servico-aplicacao-sistema-statefulset created
+
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$ minikube service servico-aplicacao-sistema-statefulset
+|-----------|---------------------------------------|-------------|-----------------------------|
+| NAMESPACE |                 NAME                  | TARGET PORT |             URL             |
+|-----------|---------------------------------------|-------------|-----------------------------|
+| default   | servico-aplicacao-sistema-statefulset | http/80     | http://192.168.99.106:31822 |
+|-----------|---------------------------------------|-------------|-----------------------------|
+* Opening service default/servico-aplicacao-sistema-statefulset in default browser...
+
+pedro@phantro MINGW64 ~/kubernetes/kubernetes
+$
+
 
 

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: aplicacao-sistema-statefulset 
+spec:
+  serviceName: aplicacao-sistema-statefulset  
+  selector:
+    matchLabels:
+      name: aplicacao-sistema-pod-statefulset
+  template:
+    metadata:
+      labels:
+        name: aplicacao-sistema-pod-statefulset
+    spec:
+      containers:
+        - name: container-aplicacao-sistema-statefulset
+          image: jnlucas/noticia-alura:v2
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: imagens
+              mountPath: /var/www/html/uploads
+            - name: sessoes
+              mountPath: /tmp
+      volumes:
+        - name: imagens
+          persistentVolumeClaim:
+            claimName: permissao-imagens
+        - name: sessoes
+          persistentVolumeClaim:
+            claimName: permissao-sessao
