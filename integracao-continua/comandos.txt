@@ -141,4 +141,14 @@ Aula 3 - Builds e testes automatizados
 	O build deve ser simples de executar, idealmente através de um único comando (single command build).
 		
 	
+Aula 4 - Mais feedback com builds contínuas 
+
+	CI Daemon - Servidor de integração => Testes e builds automatizados
+	
+	Notificações são enviadas a cada build - Sucesso ou Falha
+	
+	Builds quebrados são responsabilidades de toda a equipe. 
+	Devem ser corrigidos o mais rápido possível para não quebrar a cadeia de integração contínua.
+	
+	
 	
