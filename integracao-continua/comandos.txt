@@ -45,6 +45,90 @@ Organização de repositórios
 	- Possibilidade de definir permissões de acesso por projeto
 	- Clone, commit e build do projeto simples e rápido
 	
+Aula 2 - Estratégias de ramificação
 
+	
+	Branching Models / Strategy / Policy
+	
+		/---------o BRANCH "Desenvolvimento" 
+	o--/--o----o-----o MASTER
+					\--------o---o--o BRANCH "Release"
+	
+	
+	Ramos para funcionalidades distintas do projeto.
+	
+	Exemplos de fluxos ou modelos de ramificação:
+	
+	git flow
+	github flow
+	gitlab flow
+	pull request flow
+	one flow
+	feature branch flow
+	
+	
+	Uma BRANCH (ramificação) MASTER deve representar o estado da aplicação.
+	
+	Boas práticas:
+	
+		Commits simples e lancáveis, orientado às tarefas
+		
+		Branches atrasam integração contínua, seguram o código
+		
+		Branches de vida curta implicam em merges mais simples
+		
+		Quanto mais Branches mais burocracia
+		
+		Estratégias devem ser combvinadas pela equipe
+		
+	
+	Branch Models:
+	
+	- Temporários (branches locais) São branches localizados apenas na máquina local e deverão se extiguir, são utilizados para organizar fluxos de trabalho e depois realizar o commit.
+
+	- Feature (MASTER e FEATURE) Branches São utilizados para implementar funcionalidades ou orientar tarefas.
+
+	- Historical Branches (mastaer e develop) As alterações ficam organizadas em commits baseados na cronologia no caso de um projeto de software.
+
+	- Environment Branches (Staging e Production)] Existem branches que são baseados no ambiente, isto é, em que espaço é realizado o deploy.
+
+	- Maintenance Branches (Release e Hotfix) Temos, ainda, os branches de manutenção do sistema. 
+	
+	
+	Exemplo
+		
+	Feature Branch + Pull Request ->  Exemplo Github Flow
+	
+	Você precisa escolher um modelo de ramificação para uma equipe nova. Há duas características que precisam ser seguidas:
+
+    As novas funcionalidades devem ser implementadas em uma nova branch
+    Cada funcionalidade deve ser revisada pela equipe antes de entrar no mainline 
+
+	Qual modelo de ramificação você sugeria?
+	O GitHub Flow é um modelo leve, desde que as features branches sejam de vida curta (poucos dias).
+	Também devemos ter em mente que os pull requests podem ser uma barreira para a integração contínua.
+	
+	Como evitar branches de vida longa?
+	
+	Feature Flag
+	
+	Branch by abstraction
+	
+	
+	Como sincronizar branches?
+	
+	Merge ou Rebase?
+	
+	rebase:  
+	O rebase sincroniza/pega os commits da outra branch e reaplica os novos commits da branch atual. Dessa forma, ele reescreve o histórico da branch atual.
+	
+	Esse é a grande vantagem do rebase. Os commits aparecem como eles fossem executados um após do outro.
+			
+	
+			
+
+	
+
+		
 	
 	
