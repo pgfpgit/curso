@@ -1,0 +1,50 @@
+Aula 1 - O que é integração contínua ?
+
+Entendendo o problema:
+
+Um software é desenvolvido por uma equipe que está gerando alterações e commits. 
+A integração contínua (IC ou CI) é uma prática que requer dos desenvolvedores 
+integrar códigos em um repositório compartilhado várias vezes ao dia.
+
+Benefícios da Integração Contínua:
+
+	As falhas são detectadas mais rapidamente
+	Integrações mais simples
+	
+O que deve ser guardado no repositório?
+
+	Script de testes
+	Databae Schema
+	
+Sistemas de controle de versão:
+
+Em uma equipe de desenvolvimento, precisaremos de uma ajuda para sincronizar e manter o histórico do código, de maneira concreta utilizamos ferramentas como Git e SVN.
+
+A integração contínua não possui necessidade de muitas ferramentas, em tese, mas alguns auxílios que são padrão em práticas de desenvolvimento são requiridos.
+
+O Git é o mais popular em integração hoje em dia, mas não precisamos utiliza-lo, basta que tenhamos algum modelo de controle de versão de nossa escolha.
+
+A ferramenta em si não importa, mas o que devemos inserir em nosso sistema de controle? De maneira geral, deve conter tudo aquilo que é necessário para a construção do projeto.
+
+    código
+    scripts
+    migrações, schemas
+    IDE Configs
+
+Devemos definir uma formatação de código para a equipe. Para começarmos um projeto é necessário fazer o clone - a cópia local - e o comando unificado. 
+
+Não deve ser "comitado" o que pode ser construído. Resultados da construção do software não são comitados como como gem, jar, image e modules. 
+	
+Organização de repositórios
+
+	Multi-repo: Cada projeto com um repositório (mais comum)
+	Mono-repo: Muitos projetos em um único repositório
+	
+	Em comparação ao Mono-Repo, quais são as vantagens do *Multi-repo são:
+	
+	- Possibilidade de definir permissões de acesso por projeto
+	- Clone, commit e build do projeto simples e rápido
+	
+
+	
+	
