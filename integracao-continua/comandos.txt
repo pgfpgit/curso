@@ -123,12 +123,22 @@ Aula 2 - Estratégias de ramificação
 	O rebase sincroniza/pega os commits da outra branch e reaplica os novos commits da branch atual. Dessa forma, ele reescreve o histórico da branch atual.
 	
 	Esse é a grande vantagem do rebase. Os commits aparecem como eles fossem executados um após do outro.
-			
 	
-			
-
 	
+Aula 3 - Builds e testes automatizados 
 
+
+	Testes de unidade -> Testam uma funcão, método da sua aplicação. Testes rápidos.
+	
+	Testes de integração -> e testam a relação de elementos, como por exemplo um banco de dados e o software.
+	A realização destes testes é mais lenta, afinal possuem um outro grau de complexidade.
+	
+	Testes funcionais -> Testam um sistema completo. 
+
+	Builds lentos vão afetar negativamente a integração contínua, atrasando commits e diminuindo o feedback. 
+	Otimize o build para receber feedback mais rápido!
+
+	O build deve ser simples de executar, idealmente através de um único comando (single command build).
 		
 	
 	
