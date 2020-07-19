@@ -72,6 +72,9 @@ Aula 3 - Deployment Pipeline
 		
 		Produção
 		
+	Pipeline de implementação:
+		Unit Test --> Aceitação Automatizada --> Homologação --> Produção
+		
 	Vantagens de usar deployment pipeline:
 	
 		Entrega confiável: As etapas são testes do nosso sistema, começando com testes simples e rápidos, até chegar aos testes mais sofisticado.
@@ -95,8 +98,33 @@ Aula 3 - Deployment Pipeline
 		Deploy para ambientes de maneira igual
 		
 
+Aula 4 - Stage de commit e testes de aceitação
+
+		Commit Stage (Build Unit Test)
+
+			Unit tests, build, analysis
+			Não demora
+			Repositório
+			Todo time é responsável
+		
+		Stage de Testes de aceitação
+		
+			Essa etapa é iniciado quando o commit stage foi executado com sucesso.
+			Testar a aplicação e verificar se ela atende aos requisitos de negócio.
+			São testes baseados em requisitos, de alto nível (black box tests) e por isso muito valiosos.
+			smoke tests
+			mock tests (sistemas externos)
+			
+			
 		
 		
+		
+
+		
+		
+		
+		
+
 		
 	
 	
