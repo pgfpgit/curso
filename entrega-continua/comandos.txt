@@ -60,6 +60,45 @@ Aula 2 - Fundamentos
 			
 		Arquitetura
 			
+Aula 3 - Deployment Pipeline
+
+	Etapas do pipeline:
+	
+		Build Unit Testes
+		
+		Testes de aceitação automatizados
+		
+		Homologação UAT
+		
+		Produção
+		
+	Vantagens de usar deployment pipeline:
+	
+		Entrega confiável: As etapas são testes do nosso sistema, começando com testes simples e rápidos, até chegar aos testes mais sofisticado.
+		
+		Feedback rápido: Cada etapa dá feedback para a equipe sobre a qualidade do software.
+		
+	Boas práticas:
+	
+		Pipeline deve ser a única forma de deploy
+		
+		Deve ser o máis rápido possível
+		
+		Build deve acontecer apenas uma vez
+		
+		Build deve ser independente do ambiente
+		
+		Ambientes iguais / semelhantes
+		
+		Ambientes efêmeros (temporários)
+		
+		Deploy para ambientes de maneira igual
+		
+
+		
+		
+		
+	
 	
 	
 	
