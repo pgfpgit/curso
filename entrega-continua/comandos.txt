@@ -1,0 +1,37 @@
+Aula 1 - O que é entrega contínua
+
+Deployment Pipeline
+
+	- Colaboração
+	- Envolve várias áreas 
+	- Aprendizagem contínua
+	
+Release Antipatterns
+
+	- Gerenciamento manual de ambientes -> Deply não confiável
+		- Todos os ambientes saão tratados como código
+	
+	- Deploy Manual -> Deploy lento, propício ao erro, não confiável
+		- Escolher versao
+		- Click one button deploy
+		
+	- Deploy apenas no fim do ciclo -> Pouca colaboração, problemas so aparecem no dia da publicação
+	
+	
+Entrega contínua x Deploy contínuo
+
+		Na entrega contínua as modificações e atualizações não são enviadas prontamente para produção. Aguarda algum evento de négocio para tal.
+		Exemplo, algum evento de marketing; Treinamento de equipe, etc.
+		
+		O importante é que, na entrega contínua, as alterações não entrem em produção automaticamente, pois existe um motivo de negócio (marketing, por exemplo). 
+		Tecnicamente, não existe nenhuma razão para reter alterações.
+		
+Integração Contínua:
+
+	- Build automatizado
+	- Testes contínuos
+	- Gerenciamento de config
+	
+	
+		
+		
