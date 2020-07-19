@@ -20,17 +20,52 @@ Release Antipatterns
 	
 Entrega contínua x Deploy contínuo
 
-		Na entrega contínua as modificações e atualizações não são enviadas prontamente para produção. Aguarda algum evento de négocio para tal.
-		Exemplo, algum evento de marketing; Treinamento de equipe, etc.
+	Na entrega contínua as modificações e atualizações não são enviadas prontamente para produção. Aguarda algum evento de négocio para tal.
+	Exemplo, algum evento de marketing; Treinamento de equipe, etc.
 		
-		O importante é que, na entrega contínua, as alterações não entrem em produção automaticamente, pois existe um motivo de negócio (marketing, por exemplo). 
-		Tecnicamente, não existe nenhuma razão para reter alterações.
+	O importante é que, na entrega contínua, as alterações não entrem em produção automaticamente, pois existe um motivo de negócio (marketing, por exemplo). 
+	Tecnicamente, não existe nenhuma razão para reter alterações.
+	
+Aula 2 - Fundamentos
 		
-Integração Contínua:
+	Integração Contínua:
 
+	Antes de começar com Entrega Contínua
 	- Build automatizado
 	- Testes contínuos
 	- Gerenciamento de config
+	
+	
+	Princípios:
+	
+	Entregar software com alta qualidade e grande valor de maneira eficiente, rápido e confiável.
+	
+		Automatize
+		Versione
+		Repita
+		Garanta qualidade
+		Defina "Done"
+		Cria delivery team
+		Use a melhoria contínua
+		
+	Elementos da Entrega Contínua
+		
+		Cultura DevOps
+			- feedback, colaboração, confiança
+			- melhoria e aprendizabem contínua
+			
+		Padrões
+			- deployment pipeline
+			- deploy patterns 
+			
+		Arquitetura
+			
+	
+	
+	
+
+	
+	
 	
 	
 		
