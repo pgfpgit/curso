@@ -140,6 +140,27 @@ Aula 5 - Stage de Homologação
 	O ambiente para testes de carga serve para garantir que o software atende os requisitos não funcionais, 
 	como desempenho e carga. Os testes devem fazer parte do desenvolvimento do software e ser aplicados em ciclos. 
 	Aqui, é importante definir métricas claras e monitorar o sistema.
+	
+
+Aula 6 - Estratégias de releases
+
+	Releases de baixo risco
+	
+	    deploy e pipeline desde a primeira interação em ambientes similares.
+
+		automação, one-click deploy e smoke test ambiente
+
+		aspectos arquiteturais: testability e deployability
+
+	Blue-Green Deployment (Versão novae antiga)
+	
+		As duas versões ficam online
+		
+		Evitar que a aplicação fique offline
+		
+		Como efetuar rollback
+		
+	
 		
 		
 			
