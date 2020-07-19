@@ -116,6 +116,33 @@ Aula 4 - Stage de commit e testes de aceitação
 			mock tests (sistemas externos)
 			
 			
+Aula 5 - Stage de Homologação
+
+		End-user tests
+		Testes de aceitação manuais
+		Feedback do usuário real (Validação)
+		Equipe deve participar (feedback)
+		
+		
+		Stage test de carga
+			É preciso saber qual métrica que estamos avaliando e aonde queremos chegar.
+			
+		
+	stages que possuem uma aprovação humana:
+
+    Homologação (User Acceptance Testing Stage)
+    Teste de carga (Capacity Testing Stage)
+
+	O ambiente de homologação serve para o usuário final validar se o software atende aos requisitos e expectativas. 
+	A equipe deve participar nesses testes e eles representam uma oportunidade de aprender e receber feedback sobre a aceitação e usabilidade do software. 
+	Esses testes devem ser executadas desde início do projeto.
+
+	O ambiente para testes de carga serve para garantir que o software atende os requisitos não funcionais, 
+	como desempenho e carga. Os testes devem fazer parte do desenvolvimento do software e ser aplicados em ciclos. 
+	Aqui, é importante definir métricas claras e monitorar o sistema.
+		
+		
+			
 		
 		
 		
