@@ -466,6 +466,143 @@ vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
         exit
 
 
+Aula 2 - 
 
+
+
+Build Manual:
+
+
+Instalando o venv
+sudo pip3 install virtualenv nose coverage nosexcover pylint
+
+
+Isolando ambiente virtual
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ virtualenv  --always-copy  venv-django-todolist
+created virtual environment CPython3.6.9.final.0-64 in 3810ms
+  creator CPython3Posix(dest=/vagrant/jenkins-todo-list/venv-django-todolist, clear=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=/home/vagrant/.local/share/virtualenv)
+    added seed packages: pip==20.1.1, setuptools==49.2.0, wheel==0.34.2
+  activators BashActivator,CShellActivator,FishActivator,PowerShellActivator,PythonActivator,XonshActivator
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+
+Ativando ambiente virtual
+source venv-django-todolist/bin/activate
+
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ source venv-django-todolist/bin/activate
+(venv-django-todolist) vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+
+
+Instalando todos os requisitos
+
+(venv-django-todolist) vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ pip install -r requirements.txt
+Collecting wheel==0.29.0
+  Downloading wheel-0.29.0-py2.py3-none-any.whl (66 kB)
+     |████████████████████████████████| 66 kB 507 kB/s
+Collecting Django==2.1.7
+  Downloading Django-2.1.7-py3-none-any.whl (7.3 MB)
+     |████████████████████████████████| 7.3 MB 2.3 MB/s
+Collecting django-bootstrap-form==3.4
+  Downloading django-bootstrap-form-3.4.tar.gz (4.4 kB)
+Collecting django-glrm==1.1.3
+  Downloading django-glrm-1.1.3.tar.gz (13 kB)
+Collecting django-widget-tweaks==1.4.3
+  Downloading django_widget_tweaks-1.4.3-py2.py3-none-any.whl (9.7 kB)
+Collecting mysqlclient==1.4.2.post1
+  Downloading mysqlclient-1.4.2.post1.tar.gz (85 kB)
+     |████████████████████████████████| 85 kB 4.3 MB/s
+Collecting pytz==2018.9
+  Downloading pytz-2018.9-py2.py3-none-any.whl (510 kB)
+     |████████████████████████████████| 510 kB 3.7 MB/s
+Collecting uWSGI==2.0.18
+  Downloading uwsgi-2.0.18.tar.gz (801 kB)
+     |████████████████████████████████| 801 kB 9.6 MB/s
+Collecting gunicorn==19.9.0
+  Downloading gunicorn-19.9.0-py2.py3-none-any.whl (112 kB)
+     |████████████████████████████████| 112 kB 9.0 MB/s
+Collecting python-decouple==3.1
+  Downloading python-decouple-3.1.tar.gz (8.7 kB)
+Building wheels for collected packages: django-bootstrap-form, django-glrm, mysqlclient, uWSGI, python-decouple
+  Building wheel for django-bootstrap-form (setup.py) ... done
+  Created wheel for django-bootstrap-form: filename=django_bootstrap_form-3.4-py2.py3-none-any.whl size=5862 sha256=d6365ba794691db3d2dae8f93531e1dbecae8732d0c5f361e0a16c299693d1f9
+  Stored in directory: /home/vagrant/.cache/pip/wheels/02/5c/15/d5234a2290de45853a1e90d29078a6a4ecc94ab5f3d4a864c7
+  Building wheel for django-glrm (setup.py) ... done
+  Created wheel for django-glrm: filename=django_glrm-1.1.3-py3-none-any.whl size=9696 sha256=ec51821952a683b1bc1792e9f18a62eb338a57c6323e4b592c9fd18f90c75083
+  Stored in directory: /home/vagrant/.cache/pip/wheels/a0/33/cd/9c51759032255488e2fcf6cc6c4dce0f6fb957eb168c7bdf32
+  Building wheel for mysqlclient (setup.py) ... done
+  Created wheel for mysqlclient: filename=mysqlclient-1.4.2.post1-cp36-cp36m-linux_x86_64.whl size=98073 sha256=1f544d334dc9d8f2e6badd31eefae559e5efd903c4e8c2908196b76666dc8a3b
+  Stored in directory: /home/vagrant/.cache/pip/wheels/44/e9/6f/45074e1476614c6477ef863422c8798ff652b0172f16848cf2
+  Building wheel for uWSGI (setup.py) ... done
+  Created wheel for uWSGI: filename=uWSGI-2.0.18-cp36-cp36m-linux_x86_64.whl size=557279 sha256=9a182f0cc2abff4f2e66d28da8314a89484e9c7dbccc4db8b84cb91c2f09b132
+  Stored in directory: /home/vagrant/.cache/pip/wheels/b0/d1/ee/8f5cdd733056dca6d0221a6acc409788ea3c2b72742bb6967f
+  Building wheel for python-decouple (setup.py) ... done
+  Created wheel for python-decouple: filename=python_decouple-3.1-py3-none-any.whl size=7915 sha256=7fe09a652a8b53c452052494c832da6a95296073c9fc1ac48a880b04375b6bf2
+  Stored in directory: /home/vagrant/.cache/pip/wheels/00/2c/13/1d323aa7349e4ea8b0e6ff7b6602cf6c52d50619285b0b9aa1
+Successfully built django-bootstrap-form django-glrm mysqlclient uWSGI python-decouple
+Installing collected packages: wheel, pytz, Django, django-bootstrap-form, django-glrm, django-widget-tweaks, mysqlclient, uWSGI, gunicorn, python-decouple
+  Attempting uninstall: wheel
+    Found existing installation: wheel 0.34.2
+    Uninstalling wheel-0.34.2:
+      Successfully uninstalled wheel-0.34.2
+Successfully installed Django-2.1.7 django-bootstrap-form-3.4 django-glrm-1.1.3 django-widget-tweaks-1.4.3 gunicorn-19.9.0 mysqlclient-1.4.2.post1 python-decouple-3.1 pytz-2018.9 uWSGI-2.0.18 wheel-0.29.0
+(venv-django-todolist) vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+
+
+## Fazendo a migracao inicial dos dados ###
+
+(venv-django-todolist) vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ python manage.py makemigrations
+System check identified some issues:
+
+WARNINGS:
+core.Todo.created_at: (fields.W161) Fixed default value provided.
+        HINT: It seems you set a fixed date / time / datetime value as default for this field. This may not be what you want. If you want to have the current date as default, use `django.utils.timezone.now`
+Migrations for 'core':
+  core/migrations/0006_auto_20200721_1848.py
+    - Alter field created_at on todo
+(venv-django-todolist) vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ python manage.py migrate
+System check identified some issues:
+
+WARNINGS:
+core.Todo.created_at: (fields.W161) Fixed default value provided.
+        HINT: It seems you set a fixed date / time / datetime value as default for this field. This may not be what you want. If you want to have the current date as default, use `django.utils.timezone.now`
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, core, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying core.0001_initial... OK
+  Applying core.0002_todo_completed_at... OK
+  Applying core.0003_auto_20190307_1500... OK
+  Applying core.0004_auto_20190321_2123... OK
+  Applying core.0005_auto_20190325_2322... OK
+  Applying core.0006_auto_20200721_1848... OK
+  Applying sessions.0001_initial... OK
+(venv-django-todolist) vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+
+### Criando superusuário Jango
+(venv-django-todolist) vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ python manage.py createsuperuser
+System check identified some issues:
+
+WARNINGS:
+core.Todo.created_at: (fields.W161) Fixed default value provided.
+        HINT: It seems you set a fixed date / time / datetime value as default for this field. This may not be what you want. If you want to have the current date as default, use `django.utils.timezone.now`
+Username (leave blank to use 'vagrant'): alura
+Email address: pedro.gustavo@gmail.com
+Password:
+Password (again):
+Superuser created successfully.
+(venv-django-todolist) vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
 
 
