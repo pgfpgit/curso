@@ -1,0 +1,290 @@
+Curso Jenkins e Docker: Pipeline de entrega contínua
+
+ Aula 1 - O primeiro job com Jenkins
+
+Preparando ambiente
+
+Baixar projeto inicial
+
+Instalação de plugins para utilização de discos maiores que 10GB pelo Vagrant
+
+pedro@phantro MINGW64 /d/curso/jenkins (master)
+$ vagrant plugin install vagrant-disksize
+Installing the 'vagrant-disksize' plugin. This can take a few minutes...
+Installed the plugin 'vagrant-disksize (0.1.3)'!
+
+Subindo máquina virutal
+
+pedro@phantro MINGW64 /d/curso/jenkins (master)
+$ vagrant up
+
+
+Saída:
+=========================================================================================
+Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Importing base box 'ubuntu/bionic64'...
+==> default: Matching MAC address for NAT networking...
+==> default: Checking if box 'ubuntu/bionic64' version '20200610.1.0' is up to date...
+==> default: A newer version of the box 'ubuntu/bionic64' for provider 'virtualbox' is
+==> default: available! You currently have version '20200610.1.0'. The latest is version
+==> default: '20200717.0.0'. Run `vagrant box update` to update.
+==> default: Setting the name of the VM: jenkins_default_1595344020365_80817
+==> default: Clearing any previously set network interfaces...
+==> default: Preparing network interfaces based on configuration...
+    default: Adapter 1: nat
+    default: Adapter 2: hostonly
+==> default: You are trying to forward to privileged ports (ports <= 1024). Most
+==> default: operating systems restrict this to only privileged process (typically
+==> default: processes running as an administrative user). This is a warning in case
+==> default: the port forwarding doesn't work. If any problems occur, please try a
+==> default: port higher than 1024.
+==> default: Forwarding ports...
+    default: 81 (guest) => 81 (host) (adapter 1)
+    default: 80 (guest) => 80 (host) (adapter 1)
+    default: 3306 (guest) => 3306 (host) (adapter 1)
+    default: 8080 (guest) => 8080 (host) (adapter 1)
+    default: 9000 (guest) => 9000 (host) (adapter 1)
+    default: 19999 (guest) => 19999 (host) (adapter 1)
+    default: 9001 (guest) => 9001 (host) (adapter 1)
+    default: 22 (guest) => 2222 (host) (adapter 1)
+==> default: Running 'pre-boot' VM customizations...
+==> default: Resized disk: old 10240 MB, req 30720 MB, new 30720 MB
+==> default: You may need to resize the filesystem from within the guest.
+==> default: Booting VM...
+==> default: Waiting for machine to boot. This may take a few minutes...
+    default: SSH address: 127.0.0.1:2222
+    default: SSH username: vagrant
+    default: SSH auth method: private key
+    default: Warning: Connection reset. Retrying...
+    default: Warning: Connection aborted. Retrying...
+    default:
+    default: Vagrant insecure key detected. Vagrant will automatically replace
+    default: this with a newly generated keypair for better security.
+    default:
+    default: Inserting generated public key within guest...
+    default: Removing insecure key from the guest if it's present...
+    default: Key inserted! Disconnecting and reconnecting using new SSH key...
+==> default: Machine booted and ready!
+==> default: Checking for guest additions in VM...
+    default: The guest additions on this VM do not match the installed version of
+    default: VirtualBox! In most cases this is fine, but in rare cases it can
+    default: prevent things such as shared folders from working properly. If you see
+    default: shared folder errors, please make sure the guest additions within the
+    default: virtual machine match the version of VirtualBox you have installed on
+    default: your host and reload your VM.
+    default:
+    default: Guest Additions Version: 5.2.34
+    default: VirtualBox Version: 6.0
+==> default: Configuring and enabling network interfaces...
+==> default: Mounting shared folders...
+    default: /vagrant => D:/curso/jenkins
+    default: /configs => D:/curso/jenkins/configs
+==> default: Running provisioner: shell...
+    default: Running: inline script
+    default: Hit:1 http://archive.ubuntu.com/ubuntu bionic InRelease
+    default: Get:2 http://security.ubuntu.com/ubuntu bionic-security InRelease [88.7 kB]
+
+   ...
+efault: + sh -c docker version
+    default: Client: Docker Engine - Community
+    default:  Version:           19.03.12
+    default:  API version:       1.40
+    default:  Go version:        go1.13.10
+    default:  Git commit:        48a66213fe
+    default:  Built:             Mon Jun 22 15:45:36 2020
+    default:  OS/Arch:
+    default:    linux/amd64
+    default:  Experimental:      false
+    default:
+    default: Server: Docker Engine - Community
+    default:  Engine:
+    default:   Version:          19.03.12
+    default:   API version:      1.40 (minimum version 1.12)
+    default:   Go version:       go1.13.10
+    default:   Git commit:       48a66213fe
+    default:   Built:            Mon Jun 22 15:44:07 2020
+    default:   OS/Arch:          linux/amd64
+    default:   Experimental:     false
+    default:  containerd:
+    default:   Version:          1.2.13
+    default:   GitCommit:        7ad184331fa3e55e52b890ea95e65ba581ae3429
+    default:  runc:
+    default:   Version:          1.0.0-rc10
+    default:   GitCommit:        dc9208a3303feef5b3839f4323d9beb36df0a9dd
+    default:  docker-init:
+    default:   Version:          0.18.0
+    default:   GitCommit:        fec3683
+    default: If you would like to use Docker as a non-root user, you should now consider
+    default: adding your user to the "docker" group with something like:
+    default:
+    default:   sudo usermod -aG docker your-user
+    default:
+    default: Remember that you will have to log out and back in for this to take effect!
+    default:
+    default: WARNING: Adding a user to the "docker" group will grant the ability to run
+    default:          containers which can be used to obtain root privileges on the
+    default:          docker host.
+    default:          Refer to https://docs.docker.com/engine/security/security/#docker-daemon-attack-surface
+    default:          for more information.
+    default: Using default tag: latest
+    default: latest: Pulling from hadolint/hadolint
+    default: df20fa9351a1: Pulling fs layer
+    default: e82f5c3316e1: Pulling fs layer
+    default: df20fa9351a1:
+    default: Verifying Checksum
+    default: df20fa9351a1:
+    default: Download complete
+    default: e82f5c3316e1:
+    default: Verifying Checksum
+    default: e82f5c3316e1:
+    default: Download complete
+    default: df20fa9351a1:
+    default: Pull complete
+    default: e82f5c3316e1:
+    default: Pull complete
+    default: Digest: sha256:e0f960b5acf09ccbf092ec1e8f250cd6b5c9a586a0e9783c53618d76590b6aec
+    default: Status: Downloaded newer image for hadolint/hadolint:latest
+    default: docker.io/hadolint/hadolint:latest
+
+    pedro@phantro MINGW64 /d/curso/jenkins (master)
+$
+
+
+
+### Acessando a VM recém criada e validando instalações do MySQL e Docker
+
+pedro@phantro MINGW64 /d/curso/jenkins (master)
+$ vagrant ssh
+Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-106-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Tue Jul 21 15:29:35 UTC 2020
+
+  System load:  0.19              Users logged in:        0
+  Usage of /:   9.5% of 29.02GB   IP address for enp0s3:  10.0.2.15
+  Memory usage: 22%               IP address for enp0s8:  192.168.33.10
+  Swap usage:   0%                IP address for docker0: 172.17.0.1
+  Processes:    113
+
+
+29 packages can be updated.
+18 updates are security updates.
+
+
+*** System restart required ***
+vagrant@ubuntu-bionic:~$ ps -ef |grep -i mysql
+mysql    14768     1  0 15:27 ?        00:00:00 /usr/sbin/mysqld --daemonize --pid-file=/run/mysqld/mysqld.pid
+vagrant  17495 17480  0 15:30 pts/0    00:00:00 grep --color=auto -i mysql
+vagrant@ubuntu-bionic:~$
+vagrant@ubuntu-bionic:~$ mysql -u devops -p
+Enter password:
+ERROR 1045 (28000): Access denied for user 'devops'@'localhost' (using password: YES)
+vagrant@ubuntu-bionic:~$ mysql -u devops -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.30-0ubuntu0.18.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test_todo_dev      |
+| todo               |
+| todo_dev           |
++--------------------+
+7 rows in set (0.14 sec)
+
+mysql> exit
+Bye
+
+
+
+### Instalando o Jenkins
+
+vagrant@ubuntu-bionic:/vagrant/scripts$ sudo ./jenkins.sh
+OK
+Hit:1 http://security.ubuntu.com/ubuntu bionic-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu bionic InRelease
+Hit:3 https://download.docker.com/linux/ubuntu bionic InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu bionic-updates InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu bionic-backports InRelease
+Ign:6 https://pkg.jenkins.io/debian-stable binary/ InRelease
+Get:7 https://pkg.jenkins.io/debian-stable binary/ Release [2044 B]
+Get:8 https://pkg.jenkins.io/debian-stable binary/ Release.gpg [195 B]
+Get:9 https://pkg.jenkins.io/debian-stable binary/ Packages [17.7 kB]
+Fetched 20.0 kB in 3s (6118 B/s)
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following additional packages will be installed:
+  daemon
+The following NEW packages will be installed:
+  daemon jenkins
+0 upgraded, 2 newly installed, 0 to remove and 25 not upgraded.
+Need to get 65.7 MB of archives.
+After this operation, 66.8 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:2 http://archive.ubuntu.com/ubuntu bionic/universe amd64 daemon amd64 0.6.4-1build1 [99.5 kB]
+Get:1 https://pkg.jenkins.io/debian-stable binary/ jenkins 2.235.2 [65.6 MB]
+Fetched 65.7 MB in 12min 36s (86.9 kB/s)
+Selecting previously unselected package daemon.
+(Reading database ... 84433 files and directories currently installed.)
+Preparing to unpack .../daemon_0.6.4-1build1_amd64.deb ...
+Unpacking daemon (0.6.4-1build1) ...
+Selecting previously unselected package jenkins.
+Preparing to unpack .../jenkins_2.235.2_all.deb ...
+Unpacking jenkins (2.235.2) ...
+Setting up daemon (0.6.4-1build1) ...
+Setting up jenkins (2.235.2) ...
+Processing triggers for systemd (237-3ubuntu10.41) ...
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+Processing triggers for ureadahead (0.100.0-21) ...
+vagrant@ubuntu-bionic:/vagrant/scripts$
+
+
+### Acessando e finalizando a Instalação
+
+Acessar http://192.168.33.10:8080
+
+Informar a chave localizada em /var/lib/jenkins/secrets/initialAdminPassword
+
+vagrant@ubuntu-bionic:/vagrant/scripts$ cat /var/lib/jenkins/secrets/initialAdminPassword
+cat: /var/lib/jenkins/secrets/initialAdminPassword: Permission denied
+vagrant@ubuntu-bionic:/vagrant/scripts$ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+bc3ab670ed8f43bebd889b390ff2e0b4
+
+Instalar plugins default
+
+admin: alura
+pass: mestre123
+http://192.168.33.10:8080/
+
+
+O Jenkins é um servidor de Integração Contínua open-source escrito em Java. 
+Ele é o mais popular mas não a única opção. 
+Outros servidores de *Integração Contínua * são TeamCity, Bamboo, Travis CI ou Gitlab CI entre vários outros.
+
+
+
+
+
+
+
+
