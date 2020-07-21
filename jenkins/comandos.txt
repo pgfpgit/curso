@@ -282,7 +282,188 @@ Ele é o mais popular mas não a única opção.
 Outros servidores de *Integração Contínua * são TeamCity, Bamboo, Travis CI ou Gitlab CI entre vários outros.
 
 
+Configurando Github + Jenkins
 
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ cd ~/.ssh/
+vagrant@ubuntu-bionic:~/.ssh$ ls
+authorized_keys
+vagrant@ubuntu-bionic:~/.ssh$ ssh-key
+ssh-keygen   ssh-keyscan
+vagrant@ubuntu-bionic:~/.ssh$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/vagrant/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/vagrant/.ssh/id_rsa.
+Your public key has been saved in /home/vagrant/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:tVvgaYg9/EtmxP3jBveQQ8Jz9iWoKdhYAq+ye7ZICRo vagrant@ubuntu-bionic
+The key's randomart image is:
++---[RSA 2048]----+
+|                 |
+|    .            |
+|     o    o. .   |
+|      o+.= == = .|
+|E    ..*S Boo* +.|
+|.o... o o=oo..= .|
+|. oo     .*  oo+ |
+| ...o    + . ....|
+|  o+..    .  ..  |
++----[SHA256]-----+
+vagrant@ubuntu-bionic:~/.ssh$ cat  id_rsa
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA0GC9e/o+4vhioGH7xCY+EFd4vywGGORJEiysJTvL0PEiMjBM
+rsp1Jq4bfYg+HSeE1Kajf44yzbpSSYdqCV44653W0SqgUSDDsOmiGPODwYuxzp/n
+8FHXM8BEHafKBWLTQAOZ9JN/WJZcoiu1ybdd5UX2JDuJiFgnq4cTpRawGnlCShNk
+Wku3Nh99P77fZIe2aEV9zftrvGyfDNFu45nRDYQl2YEJ9EuHs36jawPhAqim3eEF
+yPvOM95ZRm6FoMO9Bwn2pVgalxR8W63jPNh7/dZ6azEEsfopTSldOt4EgpJfr/pr
+sSoSeTiti6mN/pcehnXvUoD0PiaG6DiC0g09HwIDAQABAoIBAH8zbrftrNHUmjAZ
+YBz+00gafWUFtLshL9HeXz9jXymu6RcGEOlqQVVZVwKsVm5pn1ZIWuoUncKkCHNG
+LF6Hm+uIsIeCo9aiT5MBK6hbjoRpiCL/zhAPhXTb2zjXIiVjjF05VZPNLiGft/Bv
+CkuWmcTJjlXT2kLWvXChxkYysVGWtbZvFIHs7wPRrbwV9x1ZExPTLSNG3vRmzonU
++G5qtIqH/PQ9nPJCZrEh8TbZYPQar02aOdIXk19oDEIAU6GZzBA1CzMek4L0ehAL
+8SFP0nBjedKvPQEKcRS2Sz2fl3NFY4OTApXnx8kO7rb8BfgH8rySTHsvJs7duTLv
+CgUJTQECgYEA8UVPWtb4Qy23/DPyO6SO5OSdgnEeIU1TX+XYRIhIwnMxQfnIMVzj
+x+SVOb8Ua0uZfhS2TAZ4tEChoKkqY0epX//Ug5foYjhG60O4XTPnjfEs4DfrMMM0
+dXouX/Ocy2obtwKzt1tjkLpYDylfYrXhPxaetuUnKjf6lzqhlyCY+EECgYEA3Rld
+mGWp4q4ikE2LhzOnD8Ilx+YV21an41j3OzPxRSPs5Im3H58gbqiaYeXrcUcG8l3V
+GOyfJTgOYaarQ3HBeFbYGqEnPZnxaF3jRBdYfliySnebk7XMfBF9gSZ5O70/CI3N
+ZziERBQ/snOtdpmyfTvftivt5sF0kJ9ejUS53V8CgYEAjFNYjSf8qu3bVYdM+t2B
+8qT461YpRQs5U8xV1b5COz5ORuYlRniVTrynAjgdgy4sLwWS5XLaH1R77PqW2blj
+TJ96FbNziDTdIpZ3k1XN9mNwS1SaqPjP+QfAEzSYXELxraaXqiwwI4wODXttq/bG
+9C+OzidHeSmnyO9j7ocaEUECgYBeCmLv5hXrL4vN+t2k5QhiwH5XVvrm7yW7omSN
+ztsJQG2LCzRTg9hEmPwJNcT9ymse/WAdGM/cAcrEKCLiLelPaQjD0tWg8vBmJsD6
+fj+KhelXmSYYHpRaFQpfu2CHU0gTOFUsWTKQzlgFbARU1KzBbY0KrAalRpVwyghq
+Z9fyWwKBgFQ+sXeNyjvPClW+UGOCqAagnIAG7lfNGv8FnFd0ubNl63jDeWqeGr/i
+bWXJCIjzkz8z5AwQrNvj6LX3j9CKSAYLbD/b4HUjghi39BpRi+hVonpvmlHILALI
+0kjZLf3tZ49HLq9VC1rQHI3v0LWdiIKffQoOVEh740VDdLpoItRv
+-----END RSA PRIVATE KEY-----
+vagrant@ubuntu-bionic:~/.ssh$ cd ..
+vagrant@ubuntu-bionic:~$ ls
+get-docker.sh
+vagrant@ubuntu-bionic:~$ cd /vagrant/
+vagrant@ubuntu-bionic:/vagrant$ ls
+Vagrantfile  comandos.txt  configs  jenkins-todo-list  scripts  ubuntu-bionic-18.04-cloudimg-console.log
+vagrant@ubuntu-bionic:/vagrant$ cd jenkins-todo-list/
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ ls
+jenkins-todo-list
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ ls
+Dockerfile  README.md  core  manage.py  requirements.txt  static  templates  to_do
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ ssh-keygen -t rsa -b 4096 -C "pedro.gustavo@gmail.com"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/vagrant/.ssh/id_rsa):
+/home/vagrant/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/vagrant/.ssh/id_rsa.
+Your public key has been saved in /home/vagrant/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:jt6/6nSMMFjX0aVFtZtIR+L0mR2aDUeRHxpkoqx/pdk pedro.gustavo@gmail.com
+The key's randomart image is:
++---[RSA 4096]----+
+|          .o.O=B+|
+|        ....*+Xo*|
+|      . .o. .=oB+|
+|     o ..   ..o +|
+|    . o.S    o o |
+|       =.o  =    |
+|      . +.o+ E   |
+|     . o ..      |
+|      ..+oo.     |
++----[SHA256]-----+
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ cat ~/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDW2Y2BhJA2vvYhYGj7CdyFpGAhHupevcwtcA/8O9RNorbN9Rac9otfzrnvvAXjxdSbmSmgveg4vxLOFw1IkafnvfoXC1YR2Xu2ullmR0SAFQIhwmLETwr8YLsSdS/D8Q+PhPL1wHeuUGxipsR3oDsdqFHBjIPEc/MkwyBmW/G4FqlR/4SXPtMlapwGnrLF3uA476DX0LqAM1jIHKq2wR0lc+FYc1IPYDB8ejLJ0agVudDZqG3QwKxNXklq8oHE1POrI1W9iQZnW97uGTDc0MwqnSCmydPVVXwaxE6LwbWottz4/MD2g11YrIzBnik5Xujll2sn52WVGfl5i8MBAsnMaE/kmTyIYKH9aWGlKap62MYWZdD38edNlMg49Twle2Wh9KZe7Wo5fHlC8iojhZ4hBb/5LEYCrz6a/JzBhwfgz3PUQR9gBUXjHSUDnB3xjSfm+Ubx9aixOY75uPQaDqttOqFYbgT4fPJ+Ix0l1Et2luDYeKfrAIJGjhcmp+VjxM0+xXBPpgvg3kEiGMpFj+pAWVwhMlzgcopft9OL5KIlPRfD81hu7EtQ6lxEOt+YrbChCAZfMh6ofnQchmSe45NBhQ0P7LbTZzkwtIw3shG5PSgyWwXAK2w0BhnVJFDvYfv8Q0apTosQSEZMXUO8eCpS7dcCQ0wg36gK3Enn3UnqgQ== pedro.gustavo@gmail.com
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git config --global user.name "pedro.gustavo"
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git config --global user.email pedro.gustavo@gmail.com
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ ssh -T git@github.com
+The authenticity of host 'github.com (18.228.52.138)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'github.com,18.228.52.138' (RSA) to the list of known hosts.
+git@github.com: Permission denied (publickey).
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ ssh -T git@github.com
+Warning: Permanently added the RSA host key for IP address '18.228.67.229' to the list of known hosts.
+Hi pgfpgit! You've successfully authenticated, but GitHub does not provide shell access.
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ cd /vagrant/jenkins-todo-list
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git init
+Initialized empty Git repository in /vagrant/jenkins-todo-list/.git/
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git add .
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git commit -m "Meu primeiro commit"
+[master (root-commit) 7cbfae0] Meu primeiro commit
+ 27 files changed, 696 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 Dockerfile
+ create mode 100644 README.md
+ create mode 100644 core/__init__.py
+ create mode 100644 core/admin.py
+ create mode 100644 core/apps.py
+ create mode 100644 core/forms.py
+ create mode 100644 core/migrations/0001_initial.py
+ create mode 100644 core/migrations/0002_todo_completed_at.py
+ create mode 100644 core/migrations/0003_auto_20190307_1500.py
+ create mode 100644 core/migrations/0004_auto_20190321_2123.py
+ create mode 100644 core/migrations/0005_auto_20190325_2322.py
+ create mode 100644 core/migrations/__init__.py
+ create mode 100644 core/models.py
+ create mode 100644 core/templates/core/base.html
+ create mode 100644 core/templates/core/index.html
+ create mode 100644 core/templates/core/new.html
+ create mode 100644 core/tests.py
+ create mode 100644 core/urls.py
+ create mode 100644 core/views.py
+ create mode 100644 manage.py
+ create mode 100644 static/css/signin.css
+ create mode 100644 templates/registration/login.html
+ create mode 100644 to_do/__init__.py
+ create mode 100644 to_do/settings.py
+ create mode 100644 to_do/urls.py
+ create mode 100644 to_do/wsgi.py
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git log
+commit 7cbfae08ea138d582a639597215ed26e9a585b08 (HEAD -> master)
+Author: pedro.gustavo <pedro.gustavo@gmail.com>
+Date:   Tue Jul 21 17:05:00 2020 +0000
+
+    Meu primeiro commit
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git remote add origin git@github.com:pgfpgit/jenkins-todo-list.git
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git push -u origin master
+ERROR: Repository not found.
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git remote add origin https://github.com/pgfpgit/jenkins-todo-list.git
+fatal: remote origin already exists.
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git status
+On branch master
+nothing to commit, working tree clean
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$ git push -u origin master
+Counting objects: 36, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (30/30), done.
+Writing objects: 100% (36/36), 9.48 KiB | 149.00 KiB/s, done.
+Total 36 (delta 3), reused 0 (delta 0)
+remote: Resolving deltas: 100% (3/3), done.
+To github.com:pgfpgit/jenkins-todo-list.git
+ * [new branch]      master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+vagrant@ubuntu-bionic:/vagrant/jenkins-todo-list$
+
+
+
+
+  # Reload nas permissoes do docker
+        sudo usermod -aG docker $USER
+        sudo usermod -aG docker jenkins
+        exit
 
 
 
