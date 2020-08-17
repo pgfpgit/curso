@@ -1,0 +1,8 @@
+
+
+Uma Pipeline dentro da Integração Contínua basicamente é onde todos os processos acontecem. 
+Vamos pensar numa linha em que temos as marcações, que chamaremos de jobs.
+Esses jobs serão os passos que queremos que a Pipeline execute. 
+
+
+Aula 1 - Criar uma conta no Gitlab.com e um novo projeto em branco chamado "bytebank"
