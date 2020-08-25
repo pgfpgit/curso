@@ -96,9 +96,11 @@ f4c102ee17cd: Pull complete
 Digest: sha256:d984df30a059aa8a4782f3cf316882c38a1a509b4ef83132658301d7a53761ee
 Status: Downloaded newer image for grafana/grafana:latest
 34f2d5e777c56f239a14d704efd5d35081094b270d8a66b32155cbe65afb928d
+
 vagrant@ubuntu-bionic:~$ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES
 34f2d5e777c5        grafana/grafana     "/run.sh"           8 seconds ago       Up 3 seconds        0.0.0.0:3000->3000/tcp   grafana
+
 vagrant@ubuntu-bionic:~$ ifconfig
 br-b4e7bf6f077f: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.18.0.1  netmask 255.255.0.0  broadcast 172.18.255.255
@@ -165,4 +167,160 @@ veth3fc5f42: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 vagrant@ubuntu-bionic:~$
 
+
+Para acessar p grafana
+	http://192.168.33.10:3000/login
+	
+	
+Para armazenar os dados que serão exibidos pelo grafana utilizaremo o inluxdb (Time Series DataBase)
+
+Para instalar o influxDB, temos:
+
+Pasta para persistência dos dados do influxdb
+vagrant@ubuntu-bionic:~$ mkdir volumes/influxdb
+
+Rodando um container com a imagem influxdb:1.0 nas portas   8083 tcp, 8086 tcp, e 25826 udp:
+vagrant@ubuntu-bionic:~$ d00f76f721c1^C
+vagrant@ubuntu-bionic:~$ docker run -d -v /home/vagrant/volumes/influxdb/:/var/lib/influxdb -p 8083:8083 -p 8086:8086 -p 25826:25826/udp --name=influxdb --network=grafana-net influxdb:1.0
+85d67cb9604510c2ed2700a054131ccbc80b4fb503a6448d4233a99816579cdd
+vagrant@ubuntu-bionic:~$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                      NAMES
+85d67cb96045        influxdb:1.0        "/entrypoint.sh infl…"   6 seconds ago       Up 4 seconds        0.0.0.0:8083->8083/tcp, 0.0.0.0:8086->8086/tcp, 0.0.0.0:25826->25826/udp   influxdb
+34f2d5e777c5        grafana/grafana     "/run.sh"                35 minutes ago      Up 35 minutes       0.0.0.0:3000->3000/tcp                                                     grafana
+vagrant@ubuntu-bionic:~$
+
+É necessário também instalar o um coletor de métricas, no nosso caso, será o Telegraf que é nativo para trabalhar com influxdb.
+
+wget -qO- https://repos.influxdata.com/influxdb.key | sudo apt-key add -
+source /etc/lsb-release
+echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+
+
+vagrant@ubuntu-bionic:~$ sudo apt-key add influxdb.key
+OK
+vagrant@ubuntu-bionic:~$ source /etc/lsb-release
+vagrant@ubuntu-bionic:~$ echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+deb https://repos.influxdata.com/ubuntu bionic stable
+vagrant@ubuntu-bionic:~$
+
+Pacote de protocolos do https:
+sudo apt-get update && sudo apt-get install apt-transport-https
+
+Agora basta instalar o pacote do telegraf:
+sudo apt-get install telegraf
+
+Para validar a instalação do telegraf:
+sudo service telegraf status
+
+Saídas:
+deb https://repos.influxdata.com/ubuntu bionic stable
+vagrant@ubuntu-bionic:~$ sudo apt-get update && sudo apt-get install apt-transport-https
+Get:1 http://security.ubuntu.com/ubuntu bionic-security InRelease [88.7 kB]
+Get:2 https://repos.influxdata.com/ubuntu bionic InRelease [4731 B]
+Get:3 https://repos.influxdata.com/ubuntu bionic/stable amd64 Packages [923 B]
+Hit:4 https://download.docker.com/linux/ubuntu bionic InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu bionic InRelease
+Get:6 http://archive.ubuntu.com/ubuntu bionic-updates InRelease [88.7 kB]
+Get:7 http://archive.ubuntu.com/ubuntu bionic-backports InRelease [74.6 kB]
+Fetched 258 kB in 17s (14.8 kB/s)
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+apt-transport-https is already the newest version (1.6.12ubuntu0.1).
+0 upgraded, 0 newly installed, 0 to remove and 4 not upgraded.
+vagrant@ubuntu-bionic:~$ sudo apt-get install telegraf
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following NEW packages will be installed:
+  telegraf
+0 upgraded, 1 newly installed, 0 to remove and 4 not upgraded.
+Need to get 21.3 MB of archives.
+After this operation, 70.0 MB of additional disk space will be used.
+Get:1 https://repos.influxdata.com/ubuntu bionic/stable amd64 telegraf amd64 1.15.2-1 [21.3 MB]
+Fetched 21.3 MB in 11s (1919 kB/s)
+Selecting previously unselected package telegraf.
+(Reading database ... 60031 files and directories currently installed.)
+Preparing to unpack .../telegraf_1.15.2-1_amd64.deb ...
+Unpacking telegraf (1.15.2-1) ...
+Setting up telegraf (1.15.2-1) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/telegraf.service → /lib/systemd/system/telegraf.service.
+vagrant@ubuntu-bionic:~$
+
+vagrant@ubuntu-bionic:~$ sudo service telegraf status
+● telegraf.service - The plugin-driven server agent for reporting metrics into InfluxDB
+   Loaded: loaded (/lib/systemd/system/telegraf.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2020-08-25 02:23:26 UTC; 1min 14s ago
+     Docs: https://github.com/influxdata/telegraf
+ Main PID: 16764 (telegraf)
+    Tasks: 8 (limit: 1152)
+   CGroup: /system.slice/telegraf.service
+           └─16764 /usr/bin/telegraf -config /etc/telegraf/telegraf.conf -config-directory /etc/telegraf/telegraf.d
+
+Aug 25 02:23:26 ubuntu-bionic systemd[1]: Started The plugin-driven server agent for reporting metrics into InfluxDB.
+Aug 25 02:23:26 ubuntu-bionic telegraf[16764]: 2020-08-25T02:23:26Z I! Starting Telegraf 1.15.2
+Aug 25 02:23:26 ubuntu-bionic telegraf[16764]: 2020-08-25T02:23:26Z I! Loaded inputs: cpu disk diskio kernel mem processes swap system
+Aug 25 02:23:26 ubuntu-bionic telegraf[16764]: 2020-08-25T02:23:26Z I! Loaded aggregators:
+Aug 25 02:23:26 ubuntu-bionic telegraf[16764]: 2020-08-25T02:23:26Z I! Loaded processors:
+Aug 25 02:23:26 ubuntu-bionic telegraf[16764]: 2020-08-25T02:23:26Z I! Loaded outputs: influxdb
+Aug 25 02:23:26 ubuntu-bionic telegraf[16764]: 2020-08-25T02:23:26Z I! Tags enabled: host=ubuntu-bionic
+Aug 25 02:23:26 ubuntu-bionic telegraf[16764]: 2020-08-25T02:23:26Z I! [agent] Config: Interval:10s, Quiet:false, Hostname:"ubuntu-bionic", Flush Interval:10s
+vagrant@ubuntu-bionic:~$
+
+Conectando no container influx para verificar se o telegraf já iniciou a coleta de dados:
+
+docker exec -it influxdb bash
+
+vagrant@ubuntu-bionic:~$ docker exec -it influxdb bash
+root@85d67cb96045:/#
+root@85d67cb96045:/#
+root@85d67cb96045:/# influx
+Visit https://enterprise.influxdata.com to register for updates, InfluxDB server management, and monitoring.
+Connected to http://localhost:8086 version 1.0.2
+InfluxDB shell version: 1.0.2
+> show databases
+name: databases
+---------------
+name
+_internal
+telegraf
+
+> use telegraf
+Using database telegraf
+> show measurements
+name: measurements
+------------------
+name
+cpu
+disk
+diskio
+kernel
+mem
+processes
+swap
+system
+
+>
+
+
+Configurar o data source no Grafana:
+
+    Configuration > Data Sources > Add data source > InfluxDB
+        Name: InfluxDB
+        URL: http://192.168.33.10:8086
+        Access: Browser
+        Database: telegraf
+        Save & Test
+
+Ler a primeira métrica em um dashboard:
+
+    Create > Dashboard > Configurações
+        General > Name: Aula 2 - Como armazenar as métricas
+        Variables > Type: Query
+        Variables > Name: server
+        Variables > Type: Query
+        Variables > Data source: InfluxDB
+        Variables > Query: SHOW TAG VALUES FROM system WITH KEY=host
+        New Panel > Add Query
 
