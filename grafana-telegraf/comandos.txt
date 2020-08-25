@@ -1,0 +1,168 @@
+
+
+Instalando grafana em cima de docker
+
+
+vagrant@ubuntu-bionic:~$ curl -fsSL https://get.docker.com -o get-docker.sh
+vagrant@ubuntu-bionic:~$ ls -la
+total 48
+drwxr-xr-x 5 vagrant vagrant  4096 Aug 25 01:20 .
+drwxr-xr-x 4 root    root     4096 Aug 24 22:02 ..
+-rw-r--r-- 1 vagrant vagrant   220 Jun 10 16:03 .bash_logout
+-rw-r--r-- 1 vagrant vagrant  3771 Jun 10 16:03 .bashrc
+drwx------ 2 vagrant vagrant  4096 Aug 24 22:02 .cache
+drwx------ 3 vagrant vagrant  4096 Aug 24 22:02 .gnupg
+-rw-r--r-- 1 vagrant vagrant   807 Jun 10 16:03 .profile
+drwx------ 2 vagrant vagrant  4096 Aug 24 22:02 .ssh
+-rw-rw-r-- 1 vagrant vagrant 13857 Aug 25 01:20 get-docker.sh
+vagrant@ubuntu-bionic:~$ sudo sh get-docker.sh
+# Executing docker install script, commit: 26ff363bcf3b3f5a00498ac43694bf1c7d9ce16c
++ sh -c apt-get update -qq >/dev/null
++ sh -c DEBIAN_FRONTEND=noninteractive apt-get install -y -qq apt-transport-https ca-certificates curl >/dev/null
++ sh -c curl -fsSL "https://download.docker.com/linux/ubuntu/gpg" | apt-key add -qq - >/dev/null
+Warning: apt-key output should not be parsed (stdout is not a terminal)
++ sh -c echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list
++ sh -c apt-get update -qq >/dev/null
++ [ -n  ]
++ sh -c apt-get install -y -qq --no-install-recommends docker-ce >/dev/null
++ sh -c docker version
+Client: Docker Engine - Community
+ Version:           19.03.12
+ API version:       1.40
+ Go version:        go1.13.10
+ Git commit:        48a66213fe
+ Built:             Mon Jun 22 15:45:36 2020
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          19.03.12
+  API version:      1.40 (minimum version 1.12)
+  Go version:       go1.13.10
+  Git commit:       48a66213fe
+  Built:            Mon Jun 22 15:44:07 2020
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.2.13
+  GitCommit:        7ad184331fa3e55e52b890ea95e65ba581ae3429
+ runc:
+  Version:          1.0.0-rc10
+  GitCommit:        dc9208a3303feef5b3839f4323d9beb36df0a9dd
+ docker-init:
+  Version:          0.18.0
+  GitCommit:        fec3683
+If you would like to use Docker as a non-root user, you should now consider
+adding your user to the "docker" group with something like:
+
+  sudo usermod -aG docker your-user
+  
+Remember that you will have to log out and back in for this to take effect!
+
+WARNING: Adding a user to the "docker" group will grant the ability to run
+         containers which can be used to obtain root privileges on the
+         docker host.
+         Refer to https://docs.docker.com/engine/security/security/#docker-daemon-attack-surface
+         for more information.
+vagrant@ubuntu-bionic:~$  sudo usermod -aG docker vagrant
+
+vagrant@ubuntu-bionic:~$ sudo usermod -aG docker vagrant
+vagrant@ubuntu-bionic:~$ exit
+logout
+
+*** System restart required ***
+Last login: Mon Aug 24 22:03:40 2020 from 10.0.2.2
+
+Criando volume para armazenamento
+vagrant@ubuntu-bionic:~$ mkdir -p volumes/grafana
+
+Criando rede no docker para o grafana
+vagrant@ubuntu-bionic:~$ docker network create grafana-net
+b4e7bf6f077fda58fcd5db0359c6cd6bc50d4c2e326d47a2ce5dcc9a31f40f12
+vagrant@ubuntu-bionic:~$
+vagrant@ubuntu-bionic:~$ ID=$(id -u)
+
+Rodando o docker e Baixando a imagem do grafana/grafana
+vagrant@ubuntu-bionic:~$ docker run -d --user $ID -v /home/vagrant/volumes/grafana/:/var/lib/grafana -p 3000:3000 --name=grafana --network=grafana-net grafana/grafana
+Unable to find image 'grafana/grafana:latest' locally
+latest: Pulling from grafana/grafana
+df20fa9351a1: Pull complete
+5d0481182ea5: Pull complete
+7e3946f527cf: Pull complete
+4768f868cf27: Pull complete
+b9a1ecff5703: Pull complete
+f4c102ee17cd: Pull complete
+Digest: sha256:d984df30a059aa8a4782f3cf316882c38a1a509b4ef83132658301d7a53761ee
+Status: Downloaded newer image for grafana/grafana:latest
+34f2d5e777c56f239a14d704efd5d35081094b270d8a66b32155cbe65afb928d
+vagrant@ubuntu-bionic:~$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES
+34f2d5e777c5        grafana/grafana     "/run.sh"           8 seconds ago       Up 3 seconds        0.0.0.0:3000->3000/tcp   grafana
+vagrant@ubuntu-bionic:~$ ifconfig
+br-b4e7bf6f077f: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.18.0.1  netmask 255.255.0.0  broadcast 172.18.255.255
+        inet6 fe80::42:7cff:fe26:b5f2  prefixlen 64  scopeid 0x20<link>
+        ether 02:42:7c:26:b5:f2  txqueuelen 0  (Ethernet)
+        RX packets 28  bytes 2398 (2.3 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 32  bytes 11444 (11.4 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+        ether 02:42:42:88:39:7a  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+enp0s3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.2.15  netmask 255.255.255.0  broadcast 10.0.2.255
+        inet6 fe80::8:97ff:fead:f6aa  prefixlen 64  scopeid 0x20<link>
+        ether 02:08:97:ad:f6:aa  txqueuelen 1000  (Ethernet)
+        RX packets 185852  bytes 223101781 (223.1 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 42735  bytes 2802391 (2.8 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+enp0s8: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.33.10  netmask 255.255.255.0  broadcast 192.168.33.255
+        inet6 fe80::a00:27ff:feb7:c9c2  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:b7:c9:c2  txqueuelen 1000  (Ethernet)
+        RX packets 270  bytes 29468 (29.4 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 27  bytes 2026 (2.0 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+enp0s9: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.0.21  netmask 255.255.255.0  broadcast 192.168.0.255
+        inet6 2804:14c:da95:902d:a00:27ff:fe3d:4d49  prefixlen 64  scopeid 0x0<global>
+        inet6 2804:14c:da95:902d::4  prefixlen 128  scopeid 0x0<global>
+        inet6 fe80::a00:27ff:fe3d:4d49  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:3d:4d:49  txqueuelen 1000  (Ethernet)
+        RX packets 2326  bytes 258362 (258.3 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 216  bytes 26192 (26.1 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 152  bytes 16854 (16.8 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 152  bytes 16854 (16.8 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+veth3fc5f42: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet6 fe80::8475:fbff:fed7:5a9f  prefixlen 64  scopeid 0x20<link>
+        ether 86:75:fb:d7:5a:9f  txqueuelen 0  (Ethernet)
+        RX packets 28  bytes 2790 (2.7 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 39  bytes 12030 (12.0 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+vagrant@ubuntu-bionic:~$
+
+

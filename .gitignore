@@ -75,4 +75,5 @@ ENV/
 env.bak/
 venv.bak/
 
+grafana-telegraf/.vagrant
 requirements.txt
