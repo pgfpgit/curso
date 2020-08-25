@@ -395,4 +395,140 @@ stress-ng: info:  [17068] dispatching hogs: 1 vm
 ^Cstress-ng: info:  [17068] successful run completed in 246.75s (4 mins, 6.75 secs)
 vagrant@ubuntu-bionic:~$
 
+Precisar reiniciar:
+===============================================
+vagrant@ubuntu-bionic:~$ docker container ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                      NAMES
+85d67cb96045        influxdb:1.0        "/entrypoint.sh infl…"   11 hours ago        Up 11 hours         0.0.0.0:8083->8083/tcp, 0.0.0.0:8086->8086/tcp, 0.0.0.0:25826->25826/udp   influxdb
+34f2d5e777c5        grafana/grafana     "/run.sh"                12 hours ago        Up 12 hours         0.0.0.0:3000->3000/tcp                                                     grafana
+vagrant@ubuntu-bionic:~$
+
+http://192.168.33.10:3000 Grafana (admin, mestre)
+
+Containers parados:
+vagrant@ubuntu-bionic:~$ docker container ls -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES
+85d67cb96045        influxdb:1.0        "/entrypoint.sh infl…"   11 hours ago        Exited (0) 13 minutes ago                       influxdb
+34f2d5e777c5        grafana/grafana     "/run.sh"                12 hours ago        Exited (0) 13 minutes ago                       grafana
+vagrant@ubuntu-bionic:~$
+
+Iniciando containers:
+vagrant@ubuntu-bionic:~$ docker start 85d67cb96045
+85d67cb96045
+vagrant@ubuntu-bionic:~$ docker start 34f2d5e777c5
+34f2d5e777c5
+vagrant@ubuntu-bionic:~$
+
+Listando containers rodando
+vagrant@ubuntu-bionic:~$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                      NAMES
+85d67cb96045        influxdb:1.0        "/entrypoint.sh infl…"   11 hours ago        Up 21 seconds       0.0.0.0:8083->8083/tcp, 0.0.0.0:8086->8086/tcp, 0.0.0.0:25826->25826/udp   influxdb
+34f2d5e777c5        grafana/grafana     "/run.sh"                12 hours ago        Up 8 seconds        0.0.0.0:3000->3000/tcp                                                     grafana
+vagrant@ubuntu-bionic:~$
+
+
+Aula 4 - Coletando métricas do docker
+
+Para coletar métricas do docker, precisamos ajustar o módulo nativo do influxdb para coletar os dados.
+
+vagrant@ubuntu-bionic:~$ sudo usermod -aG docker telegraf
+vagrant@ubuntu-bionic:~$ id telegraf
+uid=999(telegraf) gid=998(telegraf) groups=998(telegraf),999(docker)
+vagrant@ubuntu-bionic:~$
+
+Editar arquivo de configuração do telegraf e descomentar opções nativas do docker:
+
+# # Read metrics about docker containers
+ [[inputs.docker]]
+#   ## Docker Endpoint
+#   ##   To use TCP, set endpoint = "tcp://[ip]:[port]"
+#   ##   To use environment variables (ie, docker-machine), set endpoint = "ENV"
+   endpoint = "unix:///var/run/docker.sock"
+#
+#   ## Set to true to collect Swarm metrics(desired_replicas, running_replicas)
+#   gather_services = false
+#
+#   ## Only collect metrics for these containers, collect all if empty
+   container_names = []
+#
+#   ## Set the source tag for the metrics to the container ID hostname, eg first 12 chars
+#   source_tag = false
+#
+#   ## Containers to include and exclude. Globs accepted.
+#   ## Note that an empty array for both will include all containers
+   container_name_include = []
+   container_name_exclude = []
+#
+#   ## Container states to include and exclude. Globs accepted.
+#   ## When empty only containers in the "running" state will be captured.
+#   ## example: container_state_include = ["created", "restarting", "running", "removing", "paused", "exited", "dead"]
+#   ## example: container_state_exclude = ["created", "restarting", "running", "removing", "paused", "exited", "dead"]
+#   # container_state_include = []
+#   # container_state_exclude = []
+#
+#   ## Timeout for docker list, info, and stats commands
+   timeout = "5s"
+   
+Reiniciar o serviço do influx: 
+ vagrant@ubuntu-bionic:~$ sudo service telegraf restart
+ 
+Verificar o serviço do influx:
+ vagrant@ubuntu-bionic:~$ sudo service telegraf status
+● telegraf.service - The plugin-driven server agent for reporting metrics into InfluxDB
+   Loaded: loaded (/lib/systemd/system/telegraf.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2020-08-25 13:38:37 UTC; 2min 33s ago
+     Docs: https://github.com/influxdata/telegraf
+ Main PID: 3027 (telegraf)
+    Tasks: 8 (limit: 1151)
+   CGroup: /system.slice/telegraf.service
+           └─3027 /usr/bin/telegraf -config /etc/telegraf/telegraf.conf -config-directory /etc/telegraf/telegraf.d
+
+Aug 25 13:38:37 ubuntu-bionic systemd[1]: Started The plugin-driven server agent for reporting metrics into InfluxDB.
+Aug 25 13:38:37 ubuntu-bionic telegraf[3027]: 2020-08-25T13:38:37Z I! Starting Telegraf 1.15.2
+Aug 25 13:38:37 ubuntu-bionic telegraf[3027]: 2020-08-25T13:38:37Z I! Loaded inputs: disk mem cpu kernel processes swap system docker diskio
+Aug 25 13:38:37 ubuntu-bionic telegraf[3027]: 2020-08-25T13:38:37Z I! Loaded aggregators:
+Aug 25 13:38:37 ubuntu-bionic telegraf[3027]: 2020-08-25T13:38:37Z I! Loaded processors:
+Aug 25 13:38:37 ubuntu-bionic telegraf[3027]: 2020-08-25T13:38:37Z I! Loaded outputs: influxdb
+Aug 25 13:38:37 ubuntu-bionic telegraf[3027]: 2020-08-25T13:38:37Z I! Tags enabled: host=ubuntu-bionic
+Aug 25 13:38:37 ubuntu-bionic telegraf[3027]: 2020-08-25T13:38:37Z I! [agent] Config: Interval:10s, Quiet:false, Hostname:"ubuntu-bionic", Flush Interv
+lines 1-17/17 (END)
+
+Observando no banco se os novos parâmetros do docker já estão sendo coletados:
+vagrant@ubuntu-bionic:~$ docker exec -ti influxdb bash
+root@85d67cb96045:/# influx
+Visit https://enterprise.influxdata.com to register for updates, InfluxDB server management, and monitoring.
+Connected to http://localhost:8086 version 1.0.2
+InfluxDB shell version: 1.0.2
+> show databases
+name: databases
+---------------
+name
+_internal
+telegraf
+
+> use telegraf
+Using database telegraf
+> show measurements
+name: measurements
+------------------
+name
+cpu
+disk
+diskio
+docker
+docker_container_blkio
+docker_container_cpu
+docker_container_mem
+docker_container_net
+docker_container_status
+kernel
+mem
+processes
+swap
+system
+
+>
+
+
+
 
