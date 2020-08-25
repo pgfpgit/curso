@@ -303,7 +303,6 @@ system
 
 >
 
-
 Configurar o data source no Grafana:
 
     Configuration > Data Sources > Add data source > InfluxDB
@@ -323,4 +322,77 @@ Ler a primeira métrica em um dashboard:
         Variables > Data source: InfluxDB
         Variables > Query: SHOW TAG VALUES FROM system WITH KEY=host
         New Panel > Add Query
+
+Instalando ferramenta stress-ng
+
+vagrant@ubuntu-bionic:~$ sudo apt-get install stress-ng -y
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following additional packages will be installed:
+  libaio1 libsctp1
+Suggested packages:
+  lksctp-tools
+The following NEW packages will be installed:
+  libaio1 libsctp1 stress-ng
+0 upgraded, 3 newly installed, 0 to remove and 4 not upgraded.
+Need to get 1600 kB of archives.
+After this operation, 4079 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu bionic-updates/main amd64 libaio1 amd64 0.3.110-5ubuntu0.1 [6476 B]
+Get:2 http://archive.ubuntu.com/ubuntu bionic/main amd64 libsctp1 amd64 1.0.17+dfsg-2 [8008 B]
+Get:3 http://archive.ubuntu.com/ubuntu bionic-updates/universe amd64 stress-ng amd64 0.09.25-1ubuntu8 [1585 kB]
+Fetched 1600 kB in 6s (269 kB/s)
+Selecting previously unselected package libaio1:amd64.
+(Reading database ... 60043 files and directories currently installed.)
+Preparing to unpack .../libaio1_0.3.110-5ubuntu0.1_amd64.deb ...
+Unpacking libaio1:amd64 (0.3.110-5ubuntu0.1) ...
+Selecting previously unselected package libsctp1:amd64.
+Preparing to unpack .../libsctp1_1.0.17+dfsg-2_amd64.deb ...
+Unpacking libsctp1:amd64 (1.0.17+dfsg-2) ...
+Selecting previously unselected package stress-ng.
+Preparing to unpack .../stress-ng_0.09.25-1ubuntu8_amd64.deb ...
+Unpacking stress-ng (0.09.25-1ubuntu8) ...
+Setting up libsctp1:amd64 (1.0.17+dfsg-2) ...
+Setting up libaio1:amd64 (0.3.110-5ubuntu0.1) ...
+Setting up stress-ng (0.09.25-1ubuntu8) ...
+Processing triggers for man-db (2.8.3-2ubuntu0.1) ...
+Processing triggers for libc-bin (2.27-3ubuntu1.2) ...
+vagrant@ubuntu-bionic:~$
+
+Para stressar nosso CPU
+vagrant@ubuntu-bionic:~$ stress-ng -c 0 -l 95
+stress-ng: info:  [17053] defaulting to a 86400 second (1 day, 0.00 secs) run per stressor
+stress-ng: info:  [17053] dispatching hogs: 2 cpu
+
+^Cstress-ng: info:  [17053] successful run completed in 132.17s (2 mins, 12.17 secs)
+vagrant@ubuntu-bionic:~$
+
+Para aumentar o consumo de disco:
+vagrant@ubuntu-bionic:~$ dd if=/dev/zero of=image.img bs=1M count=3000
+3000+0 records in
+3000+0 records out
+3145728000 bytes (3.1 GB, 2.9 GiB) copied, 10.4249 s, 302 MB/s
+vagrant@ubuntu-bionic:~$
+
+
+Para simular consumo de memória ram:
+stress-ng --vm-bytes \
+  $(awk \
+    '/MemAvailable/{printf "%d\n", $2 * 0.9;}' \
+    < /proc/meminfo\
+  )k \
+  --vm-keep -m 1
+  
+  
+vagrant@ubuntu-bionic:~$ stress-ng --vm-bytes \
+>   $(awk \
+>     '/MemAvailable/{printf "%d\n", $2 * 0.9;}' \
+>     < /proc/meminfo\
+>   )k \
+>   --vm-keep -m 1
+stress-ng: info:  [17068] defaulting to a 86400 second (1 day, 0.00 secs) run per stressor
+stress-ng: info:  [17068] dispatching hogs: 1 vm
+^Cstress-ng: info:  [17068] successful run completed in 246.75s (4 mins, 6.75 secs)
+vagrant@ubuntu-bionic:~$
+
 
