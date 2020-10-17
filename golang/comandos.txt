@@ -1,0 +1,65 @@
+Curso Golang
+
+Instalando extensions do Visual Studio:
+Tools environment: GOPATH=C:\Users\pedro\go
+Installing 13 tools at C:\Users\pedro\go\bin in module mode.
+  guru
+  gorename
+  gotests
+  gomodifytags
+  impl
+  fillstruct
+  goplay
+  godoctor
+  dlv
+  gocode-gomod
+  godef
+  goreturns
+  golint
+
+C:\Users\pedro\go\src\hello>Finished running tool: C:\Go\bin\go.exe build -o C:\Users\pedro\AppData\Local\Temp\vscode-goxC7uRu\go-code-check hello
+
+C:\Users\pedro\go\src\hello>Finished running tool: C:\Go\bin\go.exe vet .
+
+Installing golang.org/x/tools/cmd/guru (C:\Users\pedro\go\bin\guru.exe) SUCCEEDED
+Installing golang.org/x/tools/cmd/gorename (C:\Users\pedro\go\bin\gorename.exe) SUCCEEDED
+Installing github.com/cweill/gotests/... (C:\Users\pedro\go\bin\gotests.exe) SUCCEEDED
+
+package main => indica que é o seu codigo principal
+
+function main => funcao principal
+
+Pacote fmt = pacote de formatação deve ser importado.
+
+Deve ser importado.
+
+
+Compilando meu primeiro código go:
+go build hello.go
+
+Compilando e executando meu primeiro código go:
+go run hello.go
+
+Corpo da função main:
+
+func main() {
+	
+}
+
+### Resumo ###
+
+O que aprendemos?
+
+	Instalação do Go
+	Go Workspace
+		A pasta bin para os arquivos binários, compilados
+		A pasta src para o código fonte
+		A pasta pkg para os pacotes compartilhados entre as aplicações
+	Instalação da extensão do Go no Visual Studio Code
+		Com isso temos autocomplete, detecção de erros, etc
+	Convenções da linguagem
+	Implementação do Hello World
+	Compilando e executando um programa em Go
+	
+	
+
