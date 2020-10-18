@@ -69,3 +69,15 @@ Aula 2
 Declaração de variaveis:
 
 Sempre que inicializada uma variavel terá valor vazio caso não seja atribuído um valor.
+
+Para descobrir tipos de variaveis no GO deve-se importar o pacote "reflect" e usar a função typeof.
+
+import "reflect"
+
+
+Na declaração das variáveis o var pode ser trocado por :=
+
+	nome := "Douglas"
+	idade := 24
+	versao := 1.1
+
