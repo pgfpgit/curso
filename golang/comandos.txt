@@ -46,6 +46,8 @@ func main() {
 	
 }
 
+
+
 ### Resumo ###
 
 O que aprendemos?
@@ -62,4 +64,8 @@ O que aprendemos?
 	Compilando e executando um programa em Go
 	
 	
+Aula 2
 
+Declaração de variaveis:
+
+Sempre que inicializada uma variavel terá valor vazio caso não seja atribuído um valor.
