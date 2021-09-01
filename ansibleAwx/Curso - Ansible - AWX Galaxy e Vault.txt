@@ -2,6 +2,8 @@ Curso - Ansible - AWX Galaxy e Vault
 
 Aulas
 
+git commit -m "Aula 1 - Curso AnsibleAwxGalaxyVault"
+
 Configurações iniciais 
 
 0 / 12				57min
@@ -60,3 +62,25 @@ Ansible Vault
 
     Projeto da aula anterior
     Segurança com Ansible Vault
+	
+ansibleserver: 192.168.0.21
+dbserver: 192.168.0.24	
+	
+	
+	
+	/home/adminlx/.ssh/id_rsa.pub
+	
+	/home/adminlx/.ssh/id_rsa.pub
+
+Key	
+adminlx@ansibleserver:~$ cat /home/adminlx/.ssh/id_rsa.pub
+
+Comando sudoers:
+echo "adminlx ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# if set, always use this private key file for authentication, same as
+# if passing --private-key to ansible or ansible-playbook
+private_key_file = /projeto/ansible/key/id_rsa
+
+
+
