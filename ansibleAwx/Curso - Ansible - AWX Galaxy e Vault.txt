@@ -1,0 +1,62 @@
+Curso - Ansible - AWX Galaxy e Vault
+
+Aulas
+
+Configurações iniciais 
+
+0 / 12				57min
+
+    Apresentação
+    Preparando o ambiente
+    Preparando o ambiente
+    VirtualBox
+    Configurando o DBServer
+    Validação do ambiente
+    Iniciando o Git
+    Comando para chave SSH
+    Quantidade de chaves SSH
+    Cópia de chaves SSH
+    Faça como eu fiz: Chaves SSH e modo privilegiado
+    O que aprendemos?
+
+AWX Project	0 / 8	36min
+
+    Projeto da aula anterior
+    Link pro projeto Ansible AWX
+    Instalando AWX
+    Configurando AWX
+    Executando o playbook
+    Faça como eu fiz: AWX
+    AWX Project
+    O que aprendemos?
+
+AWX e Ansible Galaxy	0 / 7
+18min
+
+    Projeto da aula anterior
+    Conhecendo o Ansible Galaxy
+    Ansible Galaxy
+    Configurando o banco de dados
+    Sync com GitHub
+    Faça como eu fiz: ansible-galaxy
+    O que aprendemos?
+
+Variáveis
+0 / 8
+29min
+
+    Projeto da aula anterior
+    Introduzindo variáveis
+    Variáveis no AWX
+    Trabalhando com facts
+    Configurando variáveis
+    Executando playbooks
+    Faça como eu fiz: Módulo Setup
+    O que aprendemos?
+
+Ansible Vault
+0 / 9
+25min
+
+    Projeto da aula anterior
+    Segurança com Ansible Vault
