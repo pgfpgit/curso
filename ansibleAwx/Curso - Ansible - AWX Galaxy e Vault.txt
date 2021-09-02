@@ -83,4 +83,28 @@ echo "adminlx ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 private_key_file = /projeto/ansible/key/id_rsa
 
 
+git config --global user.email "pedro.gustavo@gmail.com"
+git config --global user.name "pgfpgit"
+
+echo "# ansible" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:pgfpgit/ansible.git
+git push -u origin main
+
+
+https://caelum-online-public.s3.amazonaws.com/2003-ansible-avancado/02/pre-req.yml
+https://caelum-online-public.s3.amazonaws.com/2003-ansible-avancado/02/setup-awx.yml
+
+https://caelum-online-public.s3.amazonaws.com/2003-ansible-avancado/04/configure.yml
+https://caelum-online-public.s3.amazonaws.com/2003-ansible-avancado/04/mysql.yml
+https://caelum-online-public.s3.amazonaws.com/2003-ansible-avancado/04/wp.yml
+
+
+
+
+/tmp/awx/installer/inventoryng 
+/tmp/awx/installer/inventoryng
 
