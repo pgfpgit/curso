@@ -1,3 +1,36 @@
 Problema 1:
 
 Reiniciar o serviço do sistema corporativo em 10 servidores.
+
+Solução 1 - Criando o o reiniciaServicoSRV01.bat
+
+Problema 2:
+
+Esta solução baseada em batch opera em cima de arquivo texto. Não existe tratamento de objeto e seus estados.
+É necessário saber quais as saídas e erros possíveis para os comandos envolvidos.
+
+Verificando o status de um serviço com PS:
+Windows PowerShell
+Copyright (C) 2012 Microsoft Corporation. All rights reserved.
+
+PS C:\Users\pedro> Get-Service -Name "ByteBank Interface Service" -ComputerName "SRV01"
+
+Exemplo 2:
+PS C:\Users\pedro> Get-Service -Name "AMD External Events Utility" -ComputerName "phantro"
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  AMD External Ev... AMD External Events Utility
+
+$servico = Get-Service -Name "AMD External Events Utility" -ComputerName "phantro"
+
+Como $serviço é uma variável que está armazenando um objeto podemos verificar os atributos dele:
+PS C:\Users\pedro> $servico.Status
+Running
+
+Podemos criar um if para parar e subir o serviço:
+PS C:\Users\pedro> if ($servico.Status -eq "Running") {
+>> $servico.Stop()
+>> $servico.Start()
+>> } else {
+>> echo "Servico nao estava executando"
