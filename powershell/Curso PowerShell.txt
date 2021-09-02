@@ -34,3 +34,37 @@ PS C:\Users\pedro> if ($servico.Status -eq "Running") {
 >> $servico.Start()
 >> } else {
 >> echo "Servico nao estava executando"
+
+Exercício:
+==========
+Algumas vezes podemos ter problemas com serviços providos pelo próprio sistema operacional, como o serviço de áudio - chamado AudioSrv.
+
+Obtenha o serviço AudioSRV, pare-o e, em seguida, o inicie novamente - tente fazer isto enquanto ouve uma música pelo YouTube!
+
+PS C:\Windows\system32> Get-Service -Name "AudioSrv" -ComputerName "phantro"
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  AudioSrv           Windows Audio
+
+
+PS C:\Windows\system32> $servico=Get-Service -Name "AudioSrv" -ComputerName "phantro"
+PS C:\Windows\system32>
+PS C:\Windows\system32> $servico.Stop()
+PS C:\Windows\system32> Get-Service -Name "AudioSrv" -ComputerName "phantro"
+
+Status   Name               DisplayName
+------   ----               -----------
+Stopped  AudioSrv           Windows Audio
+
+
+PS C:\Windows\system32> $servico.Start()
+PS C:\Windows\system32> Get-Service -Name "AudioSrv" -ComputerName "phantro"
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  AudioSrv           Windows Audio
+
+
+
+
