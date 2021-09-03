@@ -290,3 +290,24 @@ $Profile.AllUsersAllHosts
 
 New-Item $Profile.AllUsersAllHosts
 notepad $Profile.AllUsersAllHosts
+
+
+
+## Verificando arquivos e diretórios dentro de uma pasta espefica:
+gci -Recurse
+
+$todosOsItens = gci -Recurse
+$todosOsItens.Length
+
+## Verificando apenas os arquivos dentro de uma pasta específica:
+$todosOsItens = gci -Recurse -File
+$todosOsItens.Length
+
+
+Exemplo:
+PS D:\scripts> $todosOsItens = gci -Recurse
+PS D:\scripts> $todosOsItens.Length
+7
+PS D:\scripts> $todosOsItens = gci -Recurse -File
+PS D:\scripts> $todosOsItens.Length
+6
