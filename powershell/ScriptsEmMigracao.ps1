@@ -15,6 +15,16 @@ $lengthExpr = @{
 #Criamos um array com as variáveis
 $params = $nameExpr, $lengthExpr
 
-gci -Recurse -File |
-    ? Name -like "*_migrando_*" |
-    select $params
+$resultado=
+    gci -Recurse -File |
+        ? Name -like "*_migrando_*" |
+        select $params
+    
+$estilos = Get-Content d:\curso\powershell\styles.css
+$styleTag = "<style> $estilos </style>"
+$tituloPagina = "Relatorio de Scripts em Migracao"
+$tituloBody = "<h1> $tituloPagina </h1>"
+
+$resultado | 
+    ConvertTo-Html -Head $styleTag -Title $tituloPagina -Body $tituloBody | 
+    Out-File d:\curso\powershell\relatorio.html 

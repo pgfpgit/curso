@@ -458,3 +458,13 @@ WarningPreference              Continue
 WhatIfPreference               False
 
 
+Excutando o novo script:
+PS D:\scripts> cp D:\curso\powershell\ScriptsEmMigracao.ps1 .
+PS D:\scripts> .\ScriptsEmMigracao.ps1
+
+Nome                                                        Tamanho
+----                                                        -------
+sha1_migrando_pedro.bat                                     0,00KB
+sha1_migrando_pedro - Copy (2).bat                          0,00KB
+sha1_migrando_pedro - Copy.bat                              0,00KB
+sha1_migrando_pedro.bat                                     0,00KB
