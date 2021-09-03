@@ -311,3 +311,12 @@ PS D:\scripts> $todosOsItens.Length
 PS D:\scripts> $todosOsItens = gci -Recurse -File
 PS D:\scripts> $todosOsItens.Length
 6
+
+
+Tarefa:
+De todos os scripts nós queremos SELECIONAR
+o nome dos scripts ONDE cada um destes scripts possui um nome 
+PARECIDO com *_migrando_*
+
+
+
