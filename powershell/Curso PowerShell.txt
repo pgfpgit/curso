@@ -225,3 +225,57 @@ get-alias rename
 
 #Alias feito, agora podemos executar!
 rename C:\Scripts\script.bat C:\Scripts\script_migrando.bat 
+
+
+Usando PROFILES no Power PowerShell
+PS D:\scripts> New-Alias rename rename-item
+PS D:\scripts>
+PS D:\scripts>
+PS D:\scripts> get-alias rename
+
+CommandType     Name                                               ModuleName
+-----------     ----                                               ----------
+Alias           rename -> Rename-Item
+
+Usando a variável $profile posso observar o perfil:
+
+PS D:\scripts> $profile
+C:\Users\pedro\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+
+## Criando arquivo de profile
+=============================
+New-Item $PROFILE
+
+ou
+
+New-Item C:\Users\pedro\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+
+Habilitando Política de Execução:
+get-help about-execution_policies
+
+Verificando a política de execução atual:
+PS D:\scripts> Get-ExecutionPolicy
+Restricted
+
+Modificando a polícita:
+PS D:\scripts> set-ExecutionPolicy unrestricted
+
+Execution Policy Change
+The execution policy helps protect you from scripts that you do not trust. Changing the execution policy might expose
+you to the security risks described in the about_Execution_Policies help topic at
+http://go.microsoft.com/fwlink/?LinkID=135170. Do you want to change the execution policy?
+[Y] Yes  [N] No  [S] Suspend  [?] Help (default is "Y"): Y
+
+Verificando como ficou:
+PS D:\scripts> Get-ExecutionPolicy
+Unrestricted
+
+
+Verificando o perfil para vários usuários:
+PS D:\scripts> $PROFILE.AllUsersAllHosts
+C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1
+
+Criando perfil para todos os usuários:
+new-item $PROFILE.AllUsersAllHosts
+
+Editar o "C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1" para configurar conforme desejado.
