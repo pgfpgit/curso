@@ -318,5 +318,45 @@ De todos os scripts nós queremos SELECIONAR
 o nome dos scripts ONDE cada um destes scripts possui um nome 
 PARECIDO com *_migrando_*
 
+## $todosOsItens = gci -Recurse -File
+
+#Variavel de iteracao = $_
+gci -Recurse -File | Select-Object Name | Where-Object { $_  -like "*_migrando_*" }
 
 
+EXEMPLO:
+
+PS D:\scripts> gci -Recurse -File | Select-Object Name
+
+Name
+----
+sha1.bat
+sha1_migrando_pedro.bat
+sha1.bat
+sha1_migrando_pedro - Copy (2).bat
+sha1_migrando_pedro - Copy.bat
+sha1_migrando_pedro.bat
+
+
+PS D:\scripts> gci -Recurse -File | Select-Object Name | Where-Object { $_  -like "*_migrando_*" }
+
+Name
+----
+sha1_migrando_pedro.bat
+sha1_migrando_pedro - Copy (2).bat
+sha1_migrando_pedro - Copy.bat
+sha1_migrando_pedro.bat
+
+
+
+Melhorando a saída do comando:
+gci -Recurse -File | Where-Object Name -like "*_migrando_*" | Select-Object Name, Length
+
+PS D:\scripts> gci -Recurse -File | Where-Object Name -like "*_migrando_*" | Select-Object Name, Length
+
+Name                                                                                                             Length
+----                                                                                                             ------
+sha1_migrando_pedro.bat                                                                                               0
+sha1_migrando_pedro - Copy (2).bat                                                                                    0
+sha1_migrando_pedro - Copy.bat                                                                                        0
+sha1_migrando_pedro.bat                                                                                               0
