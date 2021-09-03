@@ -360,3 +360,21 @@ sha1_migrando_pedro.bat                                                         
 sha1_migrando_pedro - Copy (2).bat                                                                                    0
 sha1_migrando_pedro - Copy.bat                                                                                        0
 sha1_migrando_pedro.bat                                                                                               0
+
+FILTER LEFT, FORMAT RIGHT
+
+
+Formatando a coluna Length:
+
+gci -Recurse -File | Where-Object Name -like "*_migrando_*" | Select-Object Name, { "{0:N2}KB" -f ($_.Length / 1KB) } 
+
+Saída:
+PS D:\scripts> gci -Recurse -File | Where-Object Name -like "*_migrando_*" | Select-Object Name, { "{0:N2}KB" -f ($_.Len
+gth / 1KB) }
+
+Name                                                         "{0:N2}KB" -f ($_.Length / 1KB)
+----                                                        ---------------------------------
+sha1_migrando_pedro.bat                                     0,00KB
+sha1_migrando_pedro - Copy (2).bat                          0,00KB
+sha1_migrando_pedro - Copy.bat                              0,00KB
+sha1_migrando_pedro.bat                                     0,00KB
