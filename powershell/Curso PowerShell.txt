@@ -428,3 +428,33 @@ $params = $nameExpr, $lengthExpr
 gci -Recurse -File |
     ? Name -like "*.exe" |
     select $params
+
+## Buscando variaveis de erro
+
+Get-Variable | ? Name -like *error*
+
+PS D:\scripts> Get-Variable | ? Name -like *error*
+
+Name                           Value
+----                           -----
+Error                          {Cannot find path 'D:\curso\powershell\-' because it does not exist., The term '.\D:\.
+ErrorActionPreference          Continue
+ErrorView                      NormalView
+MaximumErrorCount              256
+
+## Buscando variaveis de preferencias
+
+Get-Variable | ? Name -like *preference*
+PS D:\scripts> Get-Variable | ? Name -like *preference*
+
+Name                           Value
+----                           -----
+ConfirmPreference              High
+DebugPreference                SilentlyContinue
+ErrorActionPreference          Continue
+ProgressPreference             Continue
+VerbosePreference              SilentlyContinue
+WarningPreference              Continue
+WhatIfPreference               False
+
+
