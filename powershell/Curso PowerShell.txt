@@ -279,3 +279,14 @@ Criando perfil para todos os usuários:
 new-item $PROFILE.AllUsersAllHosts
 
 Editar o "C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1" para configurar conforme desejado.
+
+# Coringas também funcionam no comando Get-Help!
+Get-Help about_*
+
+Get-Help about_profiles
+
+# Verificando o local onde deve ser armazenado o script de profile para todos os usuários e todos os hosts
+$Profile.AllUsersAllHosts
+
+New-Item $Profile.AllUsersAllHosts
+notepad $Profile.AllUsersAllHosts
