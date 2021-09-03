@@ -1,7 +1,14 @@
-$nameExpr = "Name"
-$lengthExpr = { "{0:N2}KB" -f ($_.Length / 1KB) }
+$nameExpr = @{
+    Label = "Nome";
+    Expression = { $_.Name }
+}
 
-$params = ($nameExpr, $lengthExpr)
+$lengthExpr = @{
+    Label = "Tamanho";
+    Expression = { "{0:N2}KB" -f ($_.Length / 1KB) }
+}
+
+$params = $nameExpr, $lengthExpr
 
 gci -Recurse -File |
     ? Name -like "*_migrando_*" |
