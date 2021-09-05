@@ -468,3 +468,36 @@ sha1_migrando_pedro.bat                                     0,00KB
 sha1_migrando_pedro - Copy (2).bat                          0,00KB
 sha1_migrando_pedro - Copy.bat                              0,00KB
 sha1_migrando_pedro.bat                                     0,00KB
+
+
+Convertendo relatório para JSON e CSV
+
+
+PS D:\scripts>
+PS D:\scripts> Get-Content D:\curso\powershell\relatorio.csv
+#TYPE Selected.System.IO.FileInfo
+"Nome","Tamanho"
+"sha1_migrando_pedro.bat","0,00KB"
+"sha1_migrando_pedro - Copy (2).bat","0,00KB"
+"sha1_migrando_pedro - Copy.bat","0,00KB"
+"sha1_migrando_pedro.bat","0,00KB"
+PS D:\scripts> Get-Content D:\curso\powershell\relatorio.json
+[
+    {
+        "Nome":  "sha1_migrando_pedro.bat",
+        "Tamanho":  "0,00KB"
+    },
+    {
+        "Nome":  "sha1_migrando_pedro - Copy (2).bat",
+        "Tamanho":  "0,00KB"
+    },
+    {
+        "Nome":  "sha1_migrando_pedro - Copy.bat",
+        "Tamanho":  "0,00KB"
+    },
+    {
+        "Nome":  "sha1_migrando_pedro.bat",
+        "Tamanho":  "0,00KB"
+    }
+]
+PS D:\scripts>

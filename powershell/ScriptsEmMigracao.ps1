@@ -1,3 +1,4 @@
+param($tipoDeExportacao)
 $ErrorActionPreference = "Stop" 
 
 #Aqui a criamos um hashtable para a coluna do nome
@@ -19,12 +20,21 @@ $resultado=
     gci -Recurse -File |
         ? Name -like "*_migrando_*" |
         select $params
-    
-$estilos = Get-Content d:\curso\powershell\styles.css
-$styleTag = "<style> $estilos </style>"
-$tituloPagina = "Relatorio de Scripts em Migracao"
-$tituloBody = "<h1> $tituloPagina </h1>"
+If ($tipoDeExportacao -eq "HTML"){
+    $estilos = Get-Content d:\curso\powershell\styles.css
+    $styleTag = "<style> $estilos </style>"
+    $tituloPagina = "Relatorio de Scripts em Migracao"
+    $tituloBody = "<h1> $tituloPagina </h1>"
 
-$resultado | 
-    ConvertTo-Html -Head $styleTag -Title $tituloPagina -Body $tituloBody | 
-    Out-File d:\curso\powershell\relatorio.html 
+    $resultado | 
+       ConvertTo-Html -Head $styleTag -Title $tituloPagina -Body $tituloBody | 
+        Out-File d:\curso\powershell\relatorio.html 
+} elseif ($tipoDeExportacao -eq "JSON") {
+    $resultado | 
+       ConvertTo-JSON | 
+        Out-File d:\curso\powershell\relatorio.json
+} elseif ($tipoDeExportacao -eq "CSV")  {
+    $resultado | 
+       ConvertTo-CSV -NoTypeInformation | 
+        Out-File d:\curso\powershell\relatorio.csv
+}
